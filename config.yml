@@ -1,0 +1,30 @@
+messages:
+  noPermission: "&4You dont have permission to use this command!"
+  disablePlace: "&4You cannot place this item in backpack!"
+  disableCraft: "&4You cannot craft the backpack this way!"
+  giveMessage: "&6{player} &agave you &6{backpack}"
+  cancelOpen: "&4You cannot open stacked backpacks!"
+  #The disableCraft runs when player tries to craft the backpack
+  #while holding shift.
+  #Made this to prevent duping items.
+
+putBackpacksIntoShulkers: false
+
+soundLevelOfBackpacks: 0.5
+pitchLevelOfBackpacks: 1
+
+slotsLimit: '&cSlots Limit!'
+
+showContents: true
+
+backpackLore:
+- '&7A special portable bag with'
+- '&6{slotsAmount} &7slots!'
+
+
+emptyBackpack: '&cBackpack is empty!'
+
+displayItemInLore: '&a{number}x {item_name}'
+#when there is more than 5 items in the backpack
+#it will display the first 5 items and the amount of other items (summed)
+otherItemsInLore: '&7and other &6{amount} &7items!'
