@@ -284,85 +284,87 @@ public class Utils {
 		for (String line:(ArrayList<String>) FancyBags.getInstance().getConfig().get("backpackLore")) {
 			lore.add(Utils.color(line.replace("{slotsAmount}", slots + "")));
 		}
-		lore.add(" ");
 
-		if (!isEmpty(player.getOpenInventory().getTopInventory())) {
-			
-			//Count and sort all the items in the backpack
-			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-			for (ItemStack item:player.getOpenInventory().getTopInventory().getContents()) {
-				if (item != null && item.getType() != Material.AIR && !item.equals(Utils.getRedVersionGlass())) {
-					
-					if (!items.isEmpty()) {
-						boolean similar = false;
-						for (ItemStack checkedItem:items) {
-							if (item.isSimilar(checkedItem)) {
-								checkedItem.setAmount(checkedItem.getAmount() + item.getAmount());
-								similar = true;
+		if (FancyBags.getInstance().getConfig().getBoolean("showContents")) {
+			lore.add(" ");
+			if (!isEmpty(player.getOpenInventory().getTopInventory())) {
+
+				//Count and sort all the items in the backpack
+				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				for (ItemStack item:player.getOpenInventory().getTopInventory().getContents()) {
+					if (item != null && item.getType() != Material.AIR && !item.equals(Utils.getRedVersionGlass())) {
+
+						if (!items.isEmpty()) {
+							boolean similar = false;
+							for (ItemStack checkedItem:items) {
+								if (item.isSimilar(checkedItem)) {
+									checkedItem.setAmount(checkedItem.getAmount() + item.getAmount());
+									similar = true;
+								}
 							}
-						}
-						
-						if (!similar) {
+
+							if (!similar) {
+								items.add(item);
+							}
+
+						} else {
 							items.add(item);
 						}
-						
-					} else {
-						items.add(item);
 					}
 				}
-			}
-			
-			if (items.size() != 0) {
-				if (!(items.size() > 5)) {
-					for (ItemStack item:items) {
-						String structure = FancyBags.getInstance().getConfig().getString("displayItemInLore");
-						structure = structure.replace("{number}", item.getAmount() + "");
-						
-						if (item.getItemMeta().hasDisplayName()) {
-							structure = structure.replace("{item_name}", item.getItemMeta().getDisplayName());
-						} else {
-							structure = structure.replace("{item_name}", "&f" + getName(item.getType()));
+
+				if (items.size() != 0) {
+					if (!(items.size() > 5)) {
+						for (ItemStack item:items) {
+							String structure = FancyBags.getInstance().getConfig().getString("displayItemInLore");
+							structure = structure.replace("{number}", item.getAmount() + "");
+
+							if (item.getItemMeta().hasDisplayName()) {
+								structure = structure.replace("{item_name}", item.getItemMeta().getDisplayName());
+							} else {
+								structure = structure.replace("{item_name}", "&f" + getName(item.getType()));
+							}
+
+							lore.add(Utils.color(structure));
 						}
-						
-						lore.add(Utils.color(structure));
+					} else {
+						for (int i = 0; i < 5;i++) {
+							ItemStack item = items.get(i);
+							String structure = FancyBags.getInstance().getConfig().getString("displayItemInLore");
+							structure = structure.replace("{number}", item.getAmount() + "");
+
+							if (item.getItemMeta().hasDisplayName()) {
+								structure = structure.replace("{item_name}", item.getItemMeta().getDisplayName());
+							} else {
+								structure = structure.replace("{item_name}", "&f" + getName(item.getType()));
+							}
+
+							lore.add(Utils.color(structure));
+						}
+
+						int amount = 0;
+						for (int i = 5;i < items.size();i++) {
+							amount += items.get(i).getAmount();
+						}
+
+						String other = FancyBags.getInstance().getConfig().getString("otherItemsInLore");
+						other = other.replace("{amount}", amount + "");
+						lore.add(Utils.color(other));
+
 					}
 				} else {
-					for (int i = 0; i < 5;i++) {
-						ItemStack item = items.get(i);
-						String structure = FancyBags.getInstance().getConfig().getString("displayItemInLore");
-						structure = structure.replace("{number}", item.getAmount() + "");
-						
-						if (item.getItemMeta().hasDisplayName()) {
-							structure = structure.replace("{item_name}", item.getItemMeta().getDisplayName());
-						} else {
-							structure = structure.replace("{item_name}", "&f" + getName(item.getType()));
-						}
-						
-						lore.add(Utils.color(structure));
-					}
-					
-					int amount = 0;
-					for (int i = 5;i < items.size();i++) {
-						amount += items.get(i).getAmount();
-					}
-					
-					String other = FancyBags.getInstance().getConfig().getString("otherItemsInLore");
-					other = other.replace("{amount}", amount + "");
-					lore.add(Utils.color(other));
-					
+					lore.add(Utils.color(FancyBags.getInstance().getConfig().getString("emptyBackpack")));
 				}
+
+
+
+
 			} else {
 				lore.add(Utils.color(FancyBags.getInstance().getConfig().getString("emptyBackpack")));
 			}
-			
 
-			
-			
-		} else {
-			lore.add(Utils.color(FancyBags.getInstance().getConfig().getString("emptyBackpack")));
+			lore.add(" ");
 		}
-		
-		lore.add(" ");
 		return lore;
     }
     
