@@ -20,24 +20,23 @@ public class CloseInventoryEvent implements Listener{
 	@EventHandler
 	public void onCloseInventory(InventoryCloseEvent e) {
 		Player player = (Player) e.getPlayer();
+		if (player.isDead()) return;
 		if (e.getInventory().getHolder() instanceof BackpackHolder) {
-			if (!RightClickEvent.duped.containsKey(e.getPlayer().getUniqueId())) {
-				boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-				int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
-				
-				ItemStack bag = Utils.loadBackpack(player,slotsAmount);
-				
-				if (!hasTag) {
-					bag = Utils.clearOldTags(bag);
-				}
-				
-				e.getPlayer().setItemInHand(bag);
-				
-				player.playSound(player.getLocation(), Utils.getVersionChestCloseSound(), (float) FancyBags.getInstance().getConfig().getDouble("soundLevelOfBackpacks"), (float) FancyBags.getInstance().getConfig().getDouble("pitchLevelOfBackpacks"));
-				Bukkit.getPluginManager().callEvent(new BackpackCloseEvent(player, e.getView().getTopInventory()));				
-			} else {
-				RightClickEvent.duped.remove(e.getPlayer().getUniqueId());
+
+			boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
+			int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
+
+			ItemStack bag = Utils.loadBackpack(player,slotsAmount);
+
+			if (!hasTag) {
+				bag = Utils.clearOldTags(bag);
 			}
+
+			e.getPlayer().setItemInHand(bag);
+
+			player.playSound(player.getLocation(), Utils.getVersionChestCloseSound(), (float) FancyBags.getInstance().getConfig().getDouble("soundLevelOfBackpacks"), (float) FancyBags.getInstance().getConfig().getDouble("pitchLevelOfBackpacks"));
+			Bukkit.getPluginManager().callEvent(new BackpackCloseEvent(player, e.getView().getTopInventory()));
+
 		}
 		
 		if (e.getInventory().getHolder() instanceof RejectItemsHolder) {

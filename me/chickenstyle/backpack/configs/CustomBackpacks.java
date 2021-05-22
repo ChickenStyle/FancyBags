@@ -83,7 +83,7 @@ public class CustomBackpacks {
     		config.set(path + ".slotsAmount", pack.getSlotsAmount());
     		config.set(path + ".texture", pack.getTexture());
     		
-    		
+
     		try {
         		config.set(path + ".craftRecipe", pack.getRecipe().getShape());
         		ArrayList<String> ingredients = new ArrayList<String>();
