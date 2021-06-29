@@ -259,9 +259,13 @@ public class Utils {
 		boolean sendMessage = false;
 		for (int i = 0; i < slotsAmount;i++) {
 			try {
-				bag = FancyBags.getVersionHandler().addStringTag(bag, i + "", Utils.itemstackToBase64(player.getOpenInventory().getItem(i)));
+
+				bag = player.getOpenInventory().getTopInventory().getItem(i) == null ?
+						FancyBags.getVersionHandler().addStringTag(bag,i + "",itemstackToBase64(new ItemStack(Material.AIR))) :
+						FancyBags.getVersionHandler().addStringTag(bag, i + "", Utils.itemstackToBase64(player.getOpenInventory().getTopInventory().getItem(i)));
+
 			} catch (UTFDataFormatException e) {
-				addItem(player, player.getOpenInventory().getItem(i));
+				addItem(player, player.getOpenInventory().getTopInventory().getItem(i));
 			}
 		}
 		

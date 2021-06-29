@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 
+import me.chickenstyle.backpack.versions.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -26,21 +27,6 @@ import me.chickenstyle.backpack.events.DeathPlayerEvent;
 import me.chickenstyle.backpack.events.PickupItemEvent;
 import me.chickenstyle.backpack.events.PipeEvents;
 import me.chickenstyle.backpack.events.RightClickEvent;
-import me.chickenstyle.backpack.versions.Handler_1_10_R1;
-import me.chickenstyle.backpack.versions.Handler_1_11_R1;
-import me.chickenstyle.backpack.versions.Handler_1_12_R1;
-import me.chickenstyle.backpack.versions.Handler_1_13_R1;
-import me.chickenstyle.backpack.versions.Handler_1_13_R2;
-import me.chickenstyle.backpack.versions.Handler_1_14_R1;
-import me.chickenstyle.backpack.versions.Handler_1_15_R1;
-import me.chickenstyle.backpack.versions.Handler_1_16_R1;
-import me.chickenstyle.backpack.versions.Handler_1_16_R2;
-import me.chickenstyle.backpack.versions.Handler_1_16_R3;
-import me.chickenstyle.backpack.versions.Handler_1_8_R1;
-import me.chickenstyle.backpack.versions.Handler_1_8_R2;
-import me.chickenstyle.backpack.versions.Handler_1_8_R3;
-import me.chickenstyle.backpack.versions.Handler_1_9_R1;
-import me.chickenstyle.backpack.versions.Handler_1_9_R2;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -314,7 +300,10 @@ public class FancyBags extends JavaPlugin implements Listener{
 		case "v1_16_R3":
 			versionHandler = new Handler_1_16_R3();
 		break;
-		
+
+		case "v1_17_R1":
+			versionHandler = new Handler_1_17_R1();
+		break;
 		default:
 			isValid = false;
 			getServer().getConsoleSender().sendMessage(ChatColor.RED + "FancyBags >>> This version isn't supported!");
