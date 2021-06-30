@@ -69,7 +69,8 @@ public class CustomBackpacks {
         		
         		list.add(getBackpack(Integer.valueOf(id)));
         	}
-        	return list;
+
+        return list;
 
     	
     }
@@ -90,11 +91,17 @@ public class CustomBackpacks {
         		
         		for (char symbol:map.keySet()) {
         			if (map.get(symbol) != null && map.get(symbol).getType() != Material.AIR) {
-        		        if (Bukkit.getVersion().contains("1.13") || Bukkit.getVersion().contains("1.14") || Bukkit.getVersion().contains("1.15") || Bukkit.getVersion().contains("1.16")) {
-        		        	ingredients.add(symbol + ":" + map.get(symbol).getType());
-        		        } else {
-        		        	ingredients.add(symbol + ":" + map.get(symbol).getType() + "," + map.get(symbol).getData().getData());
-        		        }
+
+						if (Bukkit.getVersion().contains("1.8") ||
+								Bukkit.getVersion().contains("1.9") ||
+								Bukkit.getVersion().contains("1.10") ||
+								Bukkit.getVersion().contains("1.11") ||
+								Bukkit.getVersion().contains("1.12")) {
+							ingredients.add(symbol + ":" + map.get(symbol).getType() + "," + map.get(symbol).getData().getData());
+						} else {
+							ingredients.add(symbol + ":" + map.get(symbol).getType());
+						}
+
         			}
         		}
         		config.set(path + ".ingredients", ingredients);
@@ -126,15 +133,18 @@ public class CustomBackpacks {
 		ItemStack item = Utils.createBackpackItemStack(name, texture,slotsAmount,id);
 		
 		ShapedRecipe recipe;
-		if (Bukkit.getVersion().contains("1.12") ||
-			Bukkit.getVersion().contains("1.13") ||
-			Bukkit.getVersion().contains("1.14") ||
-			Bukkit.getVersion().contains("1.15") ||
-			Bukkit.getVersion().contains("1.16")) {
-			recipe = new ShapedRecipe(new NamespacedKey(FancyBags.getInstance(),path),item);
-		} else {
+
+
+
+		if (Bukkit.getVersion().contains("1.8") ||
+			Bukkit.getVersion().contains("1.9") ||
+			Bukkit.getVersion().contains("1.10") ||
+			Bukkit.getVersion().contains("1.11")) {
 			recipe = new ShapedRecipe(item);
+		} else {
+			recipe = new ShapedRecipe(new NamespacedKey(FancyBags.getInstance(),path),item);
 		}
+
 		
 		if (!config.get(path + ".craftRecipe").equals("none")) {
 			ArrayList<String> str = (ArrayList<String>) config.get(path + ".craftRecipe");
@@ -144,13 +154,19 @@ public class CustomBackpacks {
 			
 			for (String data: (ArrayList<String>)config.getList(path + ".ingredients")) {
 				char symbol = data.split(":")[0].charAt(0);
-		        if (Bukkit.getVersion().contains("1.13") || Bukkit.getVersion().contains("1.14") || Bukkit.getVersion().contains("1.15") || Bukkit.getVersion().contains("1.16")) {
-		        	ItemStack mat = new ItemStack(Material.valueOf(data.split(":")[1].split(",")[0]));
-		        	recipe.setIngredient(symbol, mat.getType());
-		        } else {
-		        	ItemStack mat = new ItemStack(Material.valueOf(data.split(":")[1].split(",")[0]),1,Byte.valueOf(data.split(":")[1].split(",")[1]));
-		        	recipe.setIngredient(symbol, mat.getData());
-		        }	
+
+
+				if (Bukkit.getVersion().contains("1.8") ||
+						Bukkit.getVersion().contains("1.9") ||
+						Bukkit.getVersion().contains("1.10") ||
+						Bukkit.getVersion().contains("1.11") ||
+						Bukkit.getVersion().contains("1.12")) {
+					ItemStack mat = new ItemStack(Material.valueOf(data.split(":")[1].split(",")[0]),1,Byte.valueOf(data.split(":")[1].split(",")[1]));
+					recipe.setIngredient(symbol, mat.getData());
+				} else {
+					ItemStack mat = new ItemStack(Material.valueOf(data.split(":")[1].split(",")[0]));
+					recipe.setIngredient(symbol, mat.getType());
+				}
 			}
 		} else {
 			recipe = null;
