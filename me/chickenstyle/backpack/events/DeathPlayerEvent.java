@@ -3,7 +3,10 @@ package me.chickenstyle.backpack.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.chickenstyle.backpack.customholders.CreateRecipeHolder;
+import me.chickenstyle.backpack.customholders.RejectItemsHolder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,34 +29,60 @@ public class DeathPlayerEvent implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		Player player = e.getEntity();
-		if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
-			if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
-				boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-				int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
-				ItemStack backpack = Utils.loadBackpack(player,slotsAmount);
-				
-				if (!hasTag) {
-					backpack = Utils.clearOldTags(backpack);
-				}
-				
-				
-				List<ItemStack> list = new ArrayList<ItemStack>();
-				
-				for (ItemStack item:e.getDrops()) {
-					if (item.equals(player.getItemInHand())) {
-						list.add(backpack);
-					} else {
-						list.add(item);
-					}
-				}
-				
-				e.getDrops().clear();
-				e.getDrops().addAll(list);
 
-				player.playSound(player.getLocation(), Utils.getVersionChestCloseSound(), (float) FancyBags.getInstance().getConfig().getDouble("soundLevelOfBackpacks"), (float) FancyBags.getInstance().getConfig().getDouble("pitchLevelOfBackpacks"));
-				Bukkit.getPluginManager().callEvent(new BackpackCloseEvent(player, player.getOpenInventory().getTopInventory()));	
+		if (player.getWorld().getGameRuleValue("keepInventory").equals("true")) {
+			if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
+				if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
+
+					boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
+					int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
+
+					ItemStack bag = Utils.loadBackpack(player,slotsAmount);
+
+					if (!hasTag) {
+						bag = Utils.clearOldTags(bag);
+					}
+
+					player.setItemInHand(bag);
+
+					player.playSound(player.getLocation(), Utils.getVersionChestCloseSound(), (float) FancyBags.getInstance().getConfig().getDouble("soundLevelOfBackpacks"), (float) FancyBags.getInstance().getConfig().getDouble("pitchLevelOfBackpacks"));
+					Bukkit.getPluginManager().callEvent(new BackpackCloseEvent(player, player.getOpenInventory().getTopInventory()));
+
+				}
+			}
+		} else {
+			if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
+				if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
+					boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
+					int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
+					ItemStack backpack = Utils.loadBackpack(player,slotsAmount);
+
+					if (!hasTag) {
+						backpack = Utils.clearOldTags(backpack);
+					}
+
+
+					List<ItemStack> list = new ArrayList<ItemStack>();
+
+					for (ItemStack item:e.getDrops()) {
+						if (item.equals(player.getItemInHand())) {
+							list.add(backpack);
+						} else {
+							list.add(item);
+						}
+					}
+
+					e.getDrops().clear();
+					e.getDrops().addAll(list);
+
+					player.playSound(player.getLocation(), Utils.getVersionChestCloseSound(), (float) FancyBags.getInstance().getConfig().getDouble("soundLevelOfBackpacks"), (float) FancyBags.getInstance().getConfig().getDouble("pitchLevelOfBackpacks"));
+					Bukkit.getPluginManager().callEvent(new BackpackCloseEvent(player, player.getOpenInventory().getTopInventory()));
+				}
 			}
 		}
+
+
+
 	}
 
 	@EventHandler

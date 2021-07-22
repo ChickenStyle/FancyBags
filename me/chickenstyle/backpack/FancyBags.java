@@ -1,14 +1,19 @@
 package me.chickenstyle.backpack;
 
+import java.io.File;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 
+import com.avaje.ebeaninternal.server.lib.util.MailMessage;
 import me.chickenstyle.backpack.versions.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -61,10 +66,9 @@ public class FancyBags extends JavaPlugin implements Listener{
 		this.getConfig().options().copyDefaults();
 	    saveDefaultConfig();
 	    new CustomBackpacks(this);
-		
+
+
 		//Loads proper data :)
-
-
 		if (!Bukkit.getVersion().contains("1.8") &&
 				!Bukkit.getVersion().contains("1.9") &&
 				!Bukkit.getVersion().contains("1.10") &&
@@ -98,9 +102,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 		getCommand("fancybags").setTabCompleter(new FancyTab());
 		getServer().getConsoleSender().sendMessage("FancyBags plugin has been enabled!");
 	}
-	
-	
-	
+
 	@Override
 	public void onDisable() {
 		for (Player player:getServer().getOnlinePlayers()) {

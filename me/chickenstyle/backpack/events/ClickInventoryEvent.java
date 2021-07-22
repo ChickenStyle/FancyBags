@@ -238,15 +238,14 @@ public class ClickInventoryEvent implements Listener{
 				ItemStack bagItem = Utils.createBackpackItemStack(pack.getName(), pack.getTexture(), pack.getSlotsAmount(),pack.getId());
 				
         		ShapedRecipe recipe;
-        		if (Bukkit.getVersion().contains("1.12") ||
-        			Bukkit.getVersion().contains("1.13") ||
-        			Bukkit.getVersion().contains("1.14") ||
-        			Bukkit.getVersion().contains("1.15") ||
-        			Bukkit.getVersion().contains("1.16")) {
-        			recipe = new ShapedRecipe(new NamespacedKey(FancyBags.getInstance(),"key"),bagItem);
-        		} else {
-        			recipe = new ShapedRecipe(bagItem);
-        		}
+				if (Bukkit.getVersion().contains("1.8") ||
+					Bukkit.getVersion().contains("1.9") ||
+					Bukkit.getVersion().contains("1.10") ||
+					Bukkit.getVersion().contains("1.11")) {
+					recipe = new ShapedRecipe(bagItem);
+				} else {
+					recipe = new ShapedRecipe(new NamespacedKey(FancyBags.getInstance(),"key"),bagItem);
+				}
 				
 				recipe.shape(firstLine,secondLine,thirdLine);
 				
