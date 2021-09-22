@@ -29,7 +29,15 @@ public class DeathPlayerEvent implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		Player player = e.getEntity();
-		player.sendMessage("§eDeathEvent");
+
+		//Prevent dupe bug where if you have keepInventory enabled, open the backpack, hold an item from the backpack on the cursor
+		//and then die like that with the gui and everything open, the item will drop on the floor AND will stay in the backpack.
+		//thus, it will be duped. This sets the cursor item to null on Death if keepInventory is enabled.
+		if(e.getKeepInventory() || e.getDrops().size() == 0){
+			player.setItemOnCursor(null);
+		}
+
+
 		if (player.getWorld().getGameRuleValue("keepInventory").equals("true")) {
 			if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
 				if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
