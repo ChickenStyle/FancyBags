@@ -29,7 +29,7 @@ public class DeathPlayerEvent implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		Player player = e.getEntity();
-
+		player.sendMessage("§eDeathEvent");
 		if (player.getWorld().getGameRuleValue("keepInventory").equals("true")) {
 			if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
 				if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {

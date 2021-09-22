@@ -14,21 +14,20 @@ import org.bukkit.util.StringUtil;
 
 public class FancyTab implements TabCompleter{
 	
-	List<String> arguments = new ArrayList<String>();
-	
-	
+	final List<String> arguments = new ArrayList<String>();
+	final List<String> result = new ArrayList<String>();
+
+
 	@Override
 	public List<String> onTabComplete(CommandSender sender,Command cmd, String label, String[] args) {
-		if (arguments.isEmpty()) {
-			arguments.add("addbackpack");
-			arguments.add("reload");
-			arguments.add("give");
-			arguments.add("help");
-		}
+		arguments.clear();
+		result.clear();
 		
-		List<String> result = new ArrayList<String>();
 		if (args.length == 1) {
-			result.addAll(arguments);
+			result.add("addbackpack");
+			result.add("reload");
+			result.add("give");
+			result.add("help");
 		}
 		
 		if(args.length == 2 && args[0].toLowerCase().equals("give")) {
@@ -42,12 +41,8 @@ public class FancyTab implements TabCompleter{
 				result.add(pack.getId() + "");
 			}
 		}
-		arguments.clear();
 		StringUtil.copyPartialMatches(args[args.length-1], result, arguments);
 		return arguments;
-		
-		
-
 		
 	}
 
