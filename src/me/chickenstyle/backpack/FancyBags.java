@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 
-import com.avaje.ebeaninternal.server.lib.util.MailMessage;
 import me.chickenstyle.backpack.versions.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -236,85 +235,61 @@ public class FancyBags extends JavaPlugin implements Listener{
     public String charRemoveAt(String str, int p) {  
         return str.substring(0, p) + str.substring(p + 1);  
     }
-	
+
 	public boolean getServerVersion() {
 		String version = Bukkit.getServer().getClass().getPackage().getName();
 		version = version.substring(version.lastIndexOf(".") + 1);
 		boolean isValid = true;
 		switch (version) {
-		case "v1_8_R1":
-			versionHandler = new Handler_1_8_R1();
-		break;
-		
-		case "v1_8_R2":
-			versionHandler = new Handler_1_8_R2();
-		break;
-		
-		case "v1_8_R3":
-			versionHandler = new Handler_1_8_R3();
-		break;
-		
-		case "v1_9_R1":
-			versionHandler = new Handler_1_9_R1();
-		break;
-		
-		case "v1_9_R2":
-			versionHandler = new Handler_1_9_R2();
-		break;
-		
-		case "v1_10_R1":
-			versionHandler = new Handler_1_10_R1();
-		break;
-		
-		case "v1_11_R1":
-			versionHandler = new Handler_1_11_R1();
-		break;
-		
-		case "v1_12_R1":
-			versionHandler = new Handler_1_12_R1();
-		break;
-		
-		case "v1_13_R1":
-			versionHandler = new Handler_1_13_R1();
-		break;
-		
-		case "v1_13_R2":
-			versionHandler = new Handler_1_13_R2();
-		break;
-		
-		case "v1_14_R1":
-			versionHandler = new Handler_1_14_R1();
-		break;
-		
-		case "v1_15_R1":
-			versionHandler = new Handler_1_15_R1();
-		break;
-		
-		case "v1_16_R1":
-			versionHandler = new Handler_1_16_R1();
-		break;
-		
-		case "v1_16_R2":
-			versionHandler = new Handler_1_16_R2();
-		break;
-		
-		case "v1_16_R3":
-			versionHandler = new Handler_1_16_R3();
-		break;
+			case "v1_8_R1":
+				versionHandler = new Handler_1_8_R1();
+				break;
 
-		case "v1_17_R1":
-			versionHandler = new Handler_1_17_R1();
-		break;
-		default:
-			isValid = false;
-			getServer().getConsoleSender().sendMessage(ChatColor.RED + "FancyBags >>> This version isn't supported!");
-			getServer().getConsoleSender().sendMessage(ChatColor.RED + "FancyBags >>> Plugin will be disabled!");
+			case "v1_8_R2":
+				versionHandler = new Handler_1_8_R2();
+				break;
+
+			case "v1_8_R3":
+				versionHandler = new Handler_1_8_R3();
+				break;
+
+			case "v1_9_R1":
+				versionHandler = new Handler_1_9_R1();
+				break;
+
+			case "v1_9_R2":
+				versionHandler = new Handler_1_9_R2();
+				break;
+
+			case "v1_10_R1":
+				versionHandler = new Handler_1_10_R1();
+				break;
+
+			case "v1_11_R1":
+				versionHandler = new Handler_1_11_R1();
+				break;
+
+			case "v1_12_R1":
+				versionHandler = new Handler_1_12_R1();
+				break;
+
+			case "v1_16_R3":
+				versionHandler = new Handler_1_16_R3();
+				break;
+
+			case "v1_17_R1":
+				versionHandler = new Handler_1_17_R1();
+				break;
+			default:
+				isValid = false;
+				getServer().getConsoleSender().sendMessage(ChatColor.RED + "FancyBags >>> This version isn't supported!");
+				getServer().getConsoleSender().sendMessage(ChatColor.RED + "FancyBags >>> Plugin will be disabled!");
 		}
 		if (isValid) {
 			getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "FancyBags >>> NMS Version Detected: " + version);
 		}
 		return isValid;
-		
+
 	}
 
 	public static FancyBags getInstance() {

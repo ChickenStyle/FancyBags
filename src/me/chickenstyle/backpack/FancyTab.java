@@ -10,6 +10,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import me.chickenstyle.backpack.configs.CustomBackpacks;
+import org.bukkit.util.StringUtil;
 
 public class FancyTab implements TabCompleter{
 	
@@ -27,9 +28,7 @@ public class FancyTab implements TabCompleter{
 		
 		List<String> result = new ArrayList<String>();
 		if (args.length == 1) {
-			for (String str:arguments) {
-				result.add(str);
-			}
+			result.addAll(arguments);
 		}
 		
 		if(args.length == 2 && args[0].toLowerCase().equals("give")) {
@@ -43,10 +42,12 @@ public class FancyTab implements TabCompleter{
 				result.add(pack.getId() + "");
 			}
 		}
-		
-		
+
+		StringUtil.copyPartialMatches(args[args.length-1], result, arguments);
 		return result;
 		
+		
+
 		
 	}
 
