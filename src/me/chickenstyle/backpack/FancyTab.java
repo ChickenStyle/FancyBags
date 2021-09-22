@@ -42,9 +42,9 @@ public class FancyTab implements TabCompleter{
 				result.add(pack.getId() + "");
 			}
 		}
-
+		arguments.clear();
 		StringUtil.copyPartialMatches(args[args.length-1], result, arguments);
-		return result;
+		return arguments;
 		
 		
 
