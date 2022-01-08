@@ -2,6 +2,7 @@ package me.chickenstyle.backpack;
 
 import java.util.regex.Pattern;
 
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -87,8 +88,8 @@ public class BackpackCommand implements CommandExecutor {
 												.replace("{backpack}", bag.getName())));
 										
 										sender.sendMessage(main.parse(
-												"<GREEN>You gave <GOLD>" + bag.getName() + "</GOLD> to <GOLD>"
-										).append(target.displayName())
+												"<GREEN>You gave <GOLD>").append(LegacyComponentSerializer.legacyAmpersand().deserialize(bag.getName()) ).append(main.parse("<GREEN> to <GOLD>"))
+										.append(target.displayName())
 										);
 										
 									} else {

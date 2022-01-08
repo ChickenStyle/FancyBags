@@ -36,7 +36,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 	
 	public static HashMap<UUID,Backpack> creatingBackpack = new HashMap<>();
 	public static ArrayList<NamespacedKey> recipes;
-	private static NMSHandler versionHandler;
+	private static NMSHandler versionHandler, nmsVersionHandler;
 	private static FancyBags instance;
 	private MiniMessage miniMessage;
 	
@@ -232,9 +232,10 @@ public class FancyBags extends JavaPlugin implements Listener{
 		version = version.substring(version.lastIndexOf(".") + 1);
 		boolean isValid = true;
 		if(version.contains("v1_18_R1")){
-			versionHandler = new Handler_1_18_R1();
+			versionHandler = new Handler_API(this);
+			nmsVersionHandler = new Handler_1_18_R1();
 		} else {
-			versionHandler = new Handler_1_18_R1();
+			versionHandler = new Handler_API(this);
 
 			isValid = false;
 			getServer().getConsoleSender().sendMessage(parse("<RED>FancyBags >>> This version isn't supported!"));
@@ -254,5 +255,9 @@ public class FancyBags extends JavaPlugin implements Listener{
 	
 	public static NMSHandler getNMSHandler() {
 		return versionHandler;
+	}
+
+	public static NMSHandler getLegacyNMSHandler() {
+		return nmsVersionHandler;
 	}
 }

@@ -10,7 +10,6 @@ public class Handler_1_18_R1 implements NMSHandler {
     @Override
     public ItemStack removeTag(ItemStack item,String tag) {
 
-
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
 
         CompoundTag itemCompound;
@@ -46,7 +45,6 @@ public class Handler_1_18_R1 implements NMSHandler {
             itemCompound = new CompoundTag();
         }
 
-
         itemCompound.putInt(tag, data);
 
         nmsItem.setTag(itemCompound);
@@ -80,7 +78,11 @@ public class Handler_1_18_R1 implements NMSHandler {
 
         CompoundTag itemCompound = (nmsItem.hasTag()) ? nmsItem.getTag() : new CompoundTag();
 
-        return itemCompound.contains(tag);
+        if(itemCompound != null){
+            return itemCompound.contains(tag);
+        }else{
+            return false;
+        }
 
     }
 
@@ -89,9 +91,11 @@ public class Handler_1_18_R1 implements NMSHandler {
         net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
 
         CompoundTag itemCompound = (nmsItem.hasTag()) ? nmsItem.getTag() : new CompoundTag();
-        return itemCompound.getInt(tag);
-
-
+        if(itemCompound != null){
+            return itemCompound.getInt(tag);
+        }else{
+            return -9304294;
+        }
     }
 
     @Override
@@ -99,8 +103,11 @@ public class Handler_1_18_R1 implements NMSHandler {
         final net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
 
         final CompoundTag itemCompound = (nmsItem.hasTag()) ? nmsItem.getTag() : new CompoundTag();
-        return itemCompound.getString(tag);
-
+        if(itemCompound != null){
+            return itemCompound.getString(tag);
+        }else{
+            return null;
+        }
     }
 
 

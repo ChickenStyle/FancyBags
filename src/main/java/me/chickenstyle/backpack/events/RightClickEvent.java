@@ -1,6 +1,7 @@
 package me.chickenstyle.backpack.events;
 
 
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -51,7 +52,11 @@ public class RightClickEvent implements Listener{
 							neededSlots++;
 						}
 
-						gui = Bukkit.createInventory(new BackpackHolder(), neededSlots, LegacyComponentSerializer.legacyAmpersand().deserialize(title));
+						if(title != null && !title.isBlank()){
+							gui = Bukkit.createInventory(new BackpackHolder(), neededSlots, LegacyComponentSerializer.legacyAmpersand().deserialize(title));
+						}else{
+							gui = Bukkit.createInventory(new BackpackHolder(), neededSlots, Component.text(""));
+						}
 
 						//gui = Bukkit.createInventory(new BackpackHolder(), neededSlots, Utils.color(title));
 						
