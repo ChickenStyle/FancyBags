@@ -3,12 +3,14 @@ package me.chickenstyle.backpack;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 
 import me.chickenstyle.backpack.versions.*;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Keyed;
@@ -41,6 +43,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 	public static ArrayList<NamespacedKey> recipes;
 	private static NMSHandler versionHandler;
 	private static FancyBags instance;
+	private MiniMessage miniMessage;
 	
 	
 	@EventHandler
@@ -51,6 +54,8 @@ public class FancyBags extends JavaPlugin implements Listener{
 	
 	@Override
 	public void onEnable() {
+		this.miniMessage = MiniMessage.miniMessage();
+
 		instance = this;
 		
 	    //Detects server's version
@@ -66,17 +71,12 @@ public class FancyBags extends JavaPlugin implements Listener{
 
 
 		//Loads proper data :)
-		if (!Bukkit.getVersion().contains("1.8") &&
-				!Bukkit.getVersion().contains("1.9") &&
-				!Bukkit.getVersion().contains("1.10") &&
-				!Bukkit.getVersion().contains("1.11")) {
-		    recipes = new ArrayList<NamespacedKey>();
-		}
+		recipes = new ArrayList<NamespacedKey>();
 		
 		loadListeners();
 		loadRecipes();
 		
-		if (!Bukkit.getVersion().contains("1.8") &&
+		/*if (!Bukkit.getVersion().contains("1.8") &&
 			!Bukkit.getVersion().contains("1.9") &&
 			!Bukkit.getVersion().contains("1.10")) {
 	        new UpdateChecker(this, 79997).getVersion(version -> {
@@ -86,9 +86,10 @@ public class FancyBags extends JavaPlugin implements Listener{
 	            	getServer().getConsoleSender().sendMessage(Utils.color("&cFancyBags >> You are using an outdated version of the plugin!\nYour version is: &b" +  getDescription().getVersion() + "\n&cThe latest version is: &a" + version));
 	            }
 	        });
-		}
-		
-		
+		}*/
+		getServer().getConsoleSender().sendMessage(getMiniMessage().parse("<GREEN>FancyBags >> This version of FancyBags is being maintained by Alessio Gravili, since the original project has been abandoned. For updates, please check <AQUA>https://github.com/AlessioGr/FancyBags</AQUA>. There is no automatic update checker."));
+
+
 		//Getting data
         int pluginId = 8024;
         Metrics metrics = new Metrics(this, pluginId);
@@ -100,6 +101,10 @@ public class FancyBags extends JavaPlugin implements Listener{
 		getServer().getConsoleSender().sendMessage("FancyBags plugin has been enabled!");
 	}
 
+	public final MiniMessage getMiniMessage() {
+		return miniMessage;
+	}
+
 	@Override
 	public void onDisable() {
 		for (Player player:getServer().getOnlinePlayers()) {
@@ -108,17 +113,12 @@ public class FancyBags extends JavaPlugin implements Listener{
 			}
 		}
 
-		if (!Bukkit.getVersion().contains("1.8") &&
-				!Bukkit.getVersion().contains("1.9") &&
-				!Bukkit.getVersion().contains("1.10") &&
-				!Bukkit.getVersion().contains("1.11")) {
-			if (CustomBackpacks.getBackpacks() != null) {
-				ArrayList<Backpack> packs = CustomBackpacks.getBackpacks();
-				if (!packs.isEmpty() && packs != null) {
-					for (Backpack pack:packs) {
-						removeRecipe(pack.getRecipe());
-					}
-				}	
+		if (CustomBackpacks.getBackpacks() != null) {
+			ArrayList<Backpack> packs = CustomBackpacks.getBackpacks();
+			if (!packs.isEmpty() && packs != null) {
+				for (Backpack pack:packs) {
+					removeRecipe(pack.getRecipe());
+				}
 			}
 		}
 	}
@@ -126,7 +126,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		
-		if (!Bukkit.getVersion().contains("1.8") &&
+		/*if (!Bukkit.getVersion().contains("1.8") &&
 			!Bukkit.getVersion().contains("1.9") &&
 			!Bukkit.getVersion().contains("1.10")) {
 			if (e.getPlayer().isOp()) {
@@ -145,7 +145,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 		            }
 		        });
 			}
-		}
+		}*/
 
 	}
 	
@@ -168,18 +168,13 @@ public class FancyBags extends JavaPlugin implements Listener{
 
 
 
-		if (!Bukkit.getVersion().contains("1.8") &&
-				!Bukkit.getVersion().contains("1.9") &&
-				!Bukkit.getVersion().contains("1.10") &&
-				!Bukkit.getVersion().contains("1.11")) {
-			if (!packs.isEmpty() && packs != null) {
-				for (Backpack pack: packs) {
-					if (pack.getRecipe() != null) {
-						removeRecipe(pack.getRecipe());
-					}
+		if (!packs.isEmpty() && packs != null) {
+			for (Backpack pack: packs) {
+				if (pack.getRecipe() != null) {
+					removeRecipe(pack.getRecipe());
 				}
-
 			}
+
 		}
 		
 		
@@ -193,16 +188,11 @@ public class FancyBags extends JavaPlugin implements Listener{
 
 
 
-				if (!Bukkit.getVersion().contains("1.8") &&
-					!Bukkit.getVersion().contains("1.9") &&
-					!Bukkit.getVersion().contains("1.10") &&
-					!Bukkit.getVersion().contains("1.11")) {
-					if (pack.getRecipe() != null) {
-						ShapedRecipe shapedRecipe = pack.getRecipe();
-						recipes.add(shapedRecipe.getKey());
+				if (pack.getRecipe() != null) {
+					ShapedRecipe shapedRecipe = pack.getRecipe();
+					recipes.add(shapedRecipe.getKey());
 
 
-					}
 				}
 
 
