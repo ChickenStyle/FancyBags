@@ -24,8 +24,8 @@ public class CloseInventoryEvent implements Listener{
 		if (player.isDead()) return;
 		if (e.getInventory().getHolder() instanceof BackpackHolder) {
 
-			boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-			int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
+			boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getItemInHand(), "BackpackTitle");
+			int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "Size");
 
 			ItemStack bag = Utils.loadBackpack(player,slotsAmount);
 
@@ -57,7 +57,7 @@ public class CloseInventoryEvent implements Listener{
 	
 	@EventHandler
 	public void onPlayerItemDropEvent(PlayerDropItemEvent e) {
-		if (!FancyBags.getVersionHandler().hasTag(e.getItemDrop().getItemStack(),"BackpackID")) return;
+		if (!FancyBags.getNMSHandler().hasTag(e.getItemDrop().getItemStack(),"BackpackID")) return;
 
 		if (e.getPlayer().getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
 				e.setCancelled(true);

@@ -5,8 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class Handler_1_18_R1 implements NMSHandler {
 
     @Override
@@ -98,22 +96,13 @@ public class Handler_1_18_R1 implements NMSHandler {
 
     @Override
     public String getStringData(ItemStack item,String tag) {
-        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        final net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
 
-        CompoundTag itemCompound = (nmsItem.hasTag()) ? nmsItem.getTag() : new CompoundTag();
+        final CompoundTag itemCompound = (nmsItem.hasTag()) ? nmsItem.getTag() : new CompoundTag();
         return itemCompound.getString(tag);
 
-
-
     }
 
-    private Class<?> getNMSClass(String name) {
-        try {
-            return Class.forName(name);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-    }
 
 
 }

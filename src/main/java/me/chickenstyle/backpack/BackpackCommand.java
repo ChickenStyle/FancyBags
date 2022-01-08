@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,10 +14,16 @@ import org.bukkit.inventory.ItemStack;
 
 import me.chickenstyle.backpack.configs.CustomBackpacks;
 import me.chickenstyle.backpack.prompts.IdPrompt;
+import org.jetbrains.annotations.NotNull;
 
 public class BackpackCommand implements CommandExecutor {
-	
-	private Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+	private final FancyBags main;
+	private final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+	public BackpackCommand(final FancyBags main){
+		this.main = main;
+	}
 	 
 	public boolean isInt(String strNum) {
 	    if (strNum == null) {
@@ -28,13 +33,12 @@ public class BackpackCommand implements CommandExecutor {
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
 			if (args.length >= 1) {
 				switch (args[0]) {
 				case "addbackpack":
-					if (sender instanceof Player) {
-						Player player = (Player) sender;
-						if (player.hasPermission("FancyBags.Admin") || player.hasPermission("FancyBags." + args[0].toString())) {
+					if (sender instanceof Player player) {
+						if (player.hasPermission("FancyBags.Admin") || player.hasPermission("FancyBags." + args[0])) {
 							FancyBags.creatingBackpack.put(player.getUniqueId(), new Backpack(0, "", "", 0, null, null));
 							ConversationFactory factory = new ConversationFactory(FancyBags.getInstance());
 							Conversation conversation = factory.withFirstPrompt(new IdPrompt()).withLocalEcho(true).buildConversation(player);
@@ -51,7 +55,7 @@ public class BackpackCommand implements CommandExecutor {
 						CustomBackpacks.configReload();
 						FancyBags.getInstance().reloadConfig();
 						FancyBags.getInstance().loadRecipes();
-						sender.sendMessage(ChatColor.GREEN + "Configs and recipes have been reloaded!");
+						sender.sendMessage(main.parse("<GREEN>Configs and recipes have been reloaded!"));
 						
 					} else {
 						sender.sendMessage(Message.NO_PERMISSION.getMSG());
@@ -67,7 +71,7 @@ public class BackpackCommand implements CommandExecutor {
 										Player target = Bukkit.getPlayer(args[1]);
 										Backpack bag = CustomBackpacks.getBackpack(Integer.valueOf(args[2]));		
 										
-										ItemStack itemBag = FancyBags.getVersionHandler().addStringTag(
+										ItemStack itemBag = FancyBags.getNMSHandler().addStringTag(
 												Utils.createBackpackItemStack(bag.getName(),
 														bag.getTexture(), bag.getSlotsAmount(),
 														bag.getId()), "Random", new RandomString().nextString());
@@ -82,21 +86,25 @@ public class BackpackCommand implements CommandExecutor {
 										target.sendMessage(Utils.color(Message.GIVE_MESSAGE.getMSG().replace("{player}", sender.getName())
 												.replace("{backpack}", bag.getName())));
 										
-										sender.sendMessage(Utils.color("&aYou gave &6" + bag.getName() + " &ato &6" + target.getDisplayName()));
+										sender.sendMessage(main.parse(
+												"<GREEN>You gave <GOLD>" + bag.getName() + "</GOLD> to <GOLD>"
+										).append(target.displayName())
+										);
 										
 									} else {
-										sender.sendMessage(ChatColor.RED + "There is no backpack with this id!");
+										sender.sendMessage(main.parse("<RED>There is no backpack with this id!"));
 									}
 								} else {
-									sender.sendMessage(ChatColor.RED + "Invalid backpack id!");
+									sender.sendMessage(main.parse(
+											"<RED>Invalid backpack id!"
+									));
 								}
 							} else {
-								sender.sendMessage(ChatColor.RED + "This player is offline :(");
+								sender.sendMessage(main.parse("<RED>This player is offline :("));
 							}
 						} else {
-							sender.sendMessage(ChatColor.RED + "Invalid usage");
-							sender.sendMessage(ChatColor.GRAY + "/fb give {player} {backpack ID}");
-						}			
+							sender.sendMessage(main.parse("<RED>Invalid usage\n<GRAY>fb give {player} {backpack ID}"));
+						}
 					} else {
 						sender.sendMessage(Message.NO_PERMISSION.getMSG());
 					}
@@ -126,7 +134,7 @@ public class BackpackCommand implements CommandExecutor {
 			}
 				
 
-		return false;
+		return true;
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.UUID;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -68,32 +69,14 @@ public class Utils {
 		return ChatColor.translateAlternateColorCodes('&', text);
 	}
 	
-    @SuppressWarnings("deprecation")
 	public static ItemStack getVersionSkull() {
-    	
-    	String ver = Bukkit.getVersion();
-    	
-    	if (ver.contains("1.8") || ver.contains("1.9") || ver.contains("1.10") || ver.contains("1.11") || ver.contains("1.12")) {
-    		return new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
-    	} else {
-    		return new ItemStack(Material.valueOf("PLAYER_HEAD"));
-    	}
-    	
+		return new ItemStack(Material.valueOf("PLAYER_HEAD"));
     }
 	
     
-    @SuppressWarnings("deprecation")
 	public static ItemStack getRedVersionGlass() {
-    	ItemStack glass = null;
-    	
-    	String ver = Bukkit.getVersion();
-    	
-    	if (ver.contains("1.8") || ver.contains("1.9") || ver.contains("1.10") || ver.contains("1.11") || ver.contains("1.12")) {
-    		glass = new ItemStack(Material.valueOf("STAINED_GLASS_PANE"), 1, (short) 14);
-    	} else {
-    		glass = new ItemStack(Material.valueOf("RED_STAINED_GLASS_PANE"));
-    	}
-    	
+    	final ItemStack glass = new ItemStack(Material.valueOf("RED_STAINED_GLASS_PANE"));
+
         
         ItemMeta meta = glass.getItemMeta();
         meta.setDisplayName(color(FancyBags.getInstance().getConfig().getString("slotsLimit")));
@@ -101,16 +84,8 @@ public class Utils {
         return glass;
     }
     
-    @SuppressWarnings("deprecation")
 	public static ItemStack getGreenVersionGlass() {
-    	ItemStack glass = null;
-    	
-    	String ver = Bukkit.getVersion();
-    	if (ver.contains("1.8") || ver.contains("1.9") || ver.contains("1.10") || ver.contains("1.11") || ver.contains("1.12")) {
-    		glass = new ItemStack(Material.valueOf("STAINED_GLASS_PANE"), 1, (short) 13);
-    	} else {
-    		glass = new ItemStack(Material.valueOf("GREEN_STAINED_GLASS_PANE"));
-    	}
+    	final ItemStack glass = new ItemStack(Material.valueOf("GREEN_STAINED_GLASS_PANE"));
         
         ItemMeta meta = glass.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + "Click here to save the recipe!");
@@ -119,42 +94,22 @@ public class Utils {
     }
     
     
-    @SuppressWarnings("deprecation")
 	public static ItemStack getGrayVersionGlass() {
-    	ItemStack glass = null;
-    	
-    	String ver = Bukkit.getVersion();
-    	if (ver.contains("1.8") || ver.contains("1.9") || ver.contains("1.10") || ver.contains("1.11") || ver.contains("1.12")) {
-    		glass = new ItemStack(Material.valueOf("STAINED_GLASS_PANE"), 1, (short) 7);
-    	} else {
-    		glass = new ItemStack(Material.valueOf("GRAY_STAINED_GLASS_PANE"));
-    	}
+    	final ItemStack glass = new ItemStack(Material.valueOf("GRAY_STAINED_GLASS_PANE"));
 
         
         ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
+		meta.displayName(Component.text(" "));
         glass.setItemMeta(meta);
         return glass;
     }
     
     public static Sound getVersionChestOpenSound() {
-    	Sound glass = null;
-        if (Bukkit.getVersion().contains("1.8")) {
-        	glass = Sound.valueOf("CHEST_OPEN");
-        } else {
-        	glass = Sound.valueOf("BLOCK_CHEST_OPEN");
-        }
-        return glass;
+		return Sound.valueOf("BLOCK_CHEST_OPEN");
     }
     
     public static Sound getVersionChestCloseSound() {
-    	Sound glass = null;
-        if (Bukkit.getVersion().contains("1.8")) {
-        	glass = Sound.valueOf("CHEST_CLOSE");
-        } else {
-        	glass = Sound.valueOf("BLOCK_CHEST_CLOSE");
-        }
-        return glass;
+        return Sound.valueOf("BLOCK_CHEST_CLOSE");
     }
 
 
@@ -195,18 +150,17 @@ public class Utils {
     }
     
     
-    @SuppressWarnings("unchecked")
 	public static ItemStack createBackpackItemStack(String name,String texture,int slotsAmount,int id) {
     	ItemStack item = null;
-		item = FancyBags.getVersionHandler().addIntTag(createCustomSkull(name, texture), "BackpackID", id);
-    	item = FancyBags.getVersionHandler().addStringTag(item, "BackpackTitle", name);
-		item = FancyBags.getVersionHandler().addIntTag(item, "SlotsAmount", slotsAmount);
+		item = FancyBags.getNMSHandler().addIntTag(createCustomSkull(name, texture), "BackpackID", id);
+    	item = FancyBags.getNMSHandler().addStringTag(item, "BackpackTitle", name);
+		item = FancyBags.getNMSHandler().addIntTag(item, "SlotsAmount", slotsAmount);
     	
 		for (int i = 0; i < slotsAmount; i++) {
 			
 			
 			try {
-				item = FancyBags.getVersionHandler().addStringTag(item, i + "", Utils.itemstackToBase64(new ItemStack(Material.AIR)));
+				item = FancyBags.getNMSHandler().addStringTag(item, i + "", Utils.itemstackToBase64(new ItemStack(Material.AIR)));
 			} catch (UTFDataFormatException e) {
 				
 				e.printStackTrace();
@@ -243,26 +197,25 @@ public class Utils {
     
     public static ItemStack clearOldTags(ItemStack item) {
     	
-    	item = FancyBags.getVersionHandler().addIntTag(item, "SlotsAmount", FancyBags.getVersionHandler().getIntData(item,"Size"));
-    	item = FancyBags.getVersionHandler().addStringTag(item, "BackpackTitle", FancyBags.getVersionHandler().getStringData(item,"Title"));
+    	item = FancyBags.getNMSHandler().addIntTag(item, "SlotsAmount", FancyBags.getNMSHandler().getIntData(item,"Size"));
+    	item = FancyBags.getNMSHandler().addStringTag(item, "BackpackTitle", FancyBags.getNMSHandler().getStringData(item,"Title"));
     	
-    	item = FancyBags.getVersionHandler().removeTag(item, "BackPack");
-    	item = FancyBags.getVersionHandler().removeTag(item, "Size");
-    	item = FancyBags.getVersionHandler().removeTag(item, "Title");
+    	item = FancyBags.getNMSHandler().removeTag(item, "BackPack");
+    	item = FancyBags.getNMSHandler().removeTag(item, "Size");
+    	item = FancyBags.getNMSHandler().removeTag(item, "Title");
     	return item;
     }
     
-    @SuppressWarnings("deprecation")
 	public static ItemStack loadBackpack(Player player,int slotsAmount) {
-		ItemStack bag = player.getItemInHand();
+		ItemStack bag = player.getInventory().getItemInMainHand();
 		
 		boolean sendMessage = false;
 		for (int i = 0; i < slotsAmount;i++) {
 			try {
 
 				bag = player.getOpenInventory().getTopInventory().getItem(i) == null ?
-						FancyBags.getVersionHandler().addStringTag(bag,i + "",itemstackToBase64(new ItemStack(Material.AIR))) :
-						FancyBags.getVersionHandler().addStringTag(bag, i + "", Utils.itemstackToBase64(player.getOpenInventory().getTopInventory().getItem(i)));
+						FancyBags.getNMSHandler().addStringTag(bag,i + "",itemstackToBase64(new ItemStack(Material.AIR))) :
+						FancyBags.getNMSHandler().addStringTag(bag, i + "", Utils.itemstackToBase64(player.getOpenInventory().getTopInventory().getItem(i)));
 
 			} catch (UTFDataFormatException e) {
 				addItem(player, player.getOpenInventory().getTopInventory().getItem(i));

@@ -11,15 +11,16 @@ import org.bukkit.entity.Player;
 
 import me.chickenstyle.backpack.configs.CustomBackpacks;
 import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 public class FancyTab implements TabCompleter{
 	
-	final List<String> arguments = new ArrayList<String>();
-	final List<String> result = new ArrayList<String>();
+	final List<String> arguments = new ArrayList<>();
+	final List<String> result = new ArrayList<>();
 
 
 	@Override
-	public List<String> onTabComplete(CommandSender sender,Command cmd, String label, String[] args) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
 		arguments.clear();
 		result.clear();
 		
@@ -30,13 +31,13 @@ public class FancyTab implements TabCompleter{
 			result.add("help");
 		}
 		
-		if(args.length == 2 && args[0].toLowerCase().equals("give")) {
+		if(args.length == 2 && args[0].equalsIgnoreCase("give")) {
 			for (Player player:Bukkit.getServer().getOnlinePlayers()) {
 				result.add(player.getName());
 			}
 		}
 		
-		if(args.length == 3 && args[0].toLowerCase().equals("give")) {
+		if(args.length == 3 && args[0].equalsIgnoreCase("give")) {
 			for (Backpack pack:CustomBackpacks.getBackpacks()) {
 				result.add(pack.getId() + "");
 			}

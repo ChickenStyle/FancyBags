@@ -9,7 +9,7 @@ public enum Message {
     GIVE_MESSAGE(Color(getString("messages.giveMessage"))),
 	DISABLE_CRAFT(Color(getString("messages.disableCraft"))),
 	CANCEL_OPEN(Color(getString("messages.cancelOpen")));
-    private String error;
+    private final String error;
 
     Message(String error) {
         this.error = error;

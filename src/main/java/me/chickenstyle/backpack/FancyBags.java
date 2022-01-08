@@ -1,21 +1,16 @@
 package me.chickenstyle.backpack;
 
-import java.io.File;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 
 import me.chickenstyle.backpack.versions.*;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,7 +34,7 @@ import me.chickenstyle.backpack.events.RightClickEvent;
 public class FancyBags extends JavaPlugin implements Listener{
 	
 	
-	public static HashMap<UUID,Backpack> creatingBackpack = new HashMap<UUID,Backpack>();
+	public static HashMap<UUID,Backpack> creatingBackpack = new HashMap<>();
 	public static ArrayList<NamespacedKey> recipes;
 	private static NMSHandler versionHandler;
 	private static FancyBags instance;
@@ -48,7 +43,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 	
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent e) {
-		if (creatingBackpack.containsKey(e.getPlayer().getUniqueId())) creatingBackpack.remove(e.getPlayer().getUniqueId());
+		creatingBackpack.remove(e.getPlayer().getUniqueId());
 	}
 	
 	
@@ -71,7 +66,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 
 
 		//Loads proper data :)
-		recipes = new ArrayList<NamespacedKey>();
+		recipes = new ArrayList<>();
 		
 		loadListeners();
 		loadRecipes();
@@ -87,7 +82,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 	            }
 	        });
 		}*/
-		getServer().getConsoleSender().sendMessage(getMiniMessage().parse("<GREEN>FancyBags >> This version of FancyBags is being maintained by Alessio Gravili, since the original project has been abandoned. For updates, please check <AQUA>https://github.com/AlessioGr/FancyBags</AQUA>. There is no automatic update checker."));
+		getServer().getConsoleSender().sendMessage(parse("<GREEN>FancyBags >> This version of FancyBags is being maintained by Alessio Gravili, since the original project has been abandoned. For updates, please check <AQUA>https://github.com/AlessioGr/FancyBags</AQUA>. There is no automatic update checker."));
 
 
 		//Getting data
@@ -96,13 +91,18 @@ public class FancyBags extends JavaPlugin implements Listener{
         metrics.addCustomChart(new Metrics.SimplePie("chart_id", () -> "My value"));
 		
 		//Loads command
-		getCommand("fancybags").setExecutor(new BackpackCommand());
-		getCommand("fancybags").setTabCompleter(new FancyTab());
+		final PluginCommand fancyBagsCommand = getCommand("fancybags");
+		if(fancyBagsCommand != null){
+			fancyBagsCommand.setExecutor(new BackpackCommand(this));
+			fancyBagsCommand.setTabCompleter(new FancyTab());
+		}
+
 		getServer().getConsoleSender().sendMessage("FancyBags plugin has been enabled!");
 	}
 
-	public final MiniMessage getMiniMessage() {
-		return miniMessage;
+
+	public final Component parse(final String miniMessageString){
+		return miniMessage.parse(miniMessageString);
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getPluginManager().registerEvents(new RightClickEvent(), this);
 		Bukkit.getPluginManager().registerEvents(new CloseInventoryEvent(), this);
-		Bukkit.getPluginManager().registerEvents(new ClickInventoryEvent(), this);
+		Bukkit.getPluginManager().registerEvents(new ClickInventoryEvent(this), this);
 		Bukkit.getPluginManager().registerEvents(new CraftEvent(),this);
 		Bukkit.getPluginManager().registerEvents(new DeathPlayerEvent(), this);
 		Bukkit.getPluginManager().registerEvents(new PickupItemEvent(), this);
@@ -191,22 +191,20 @@ public class FancyBags extends JavaPlugin implements Listener{
 				if (pack.getRecipe() != null) {
 					ShapedRecipe shapedRecipe = pack.getRecipe();
 					recipes.add(shapedRecipe.getKey());
-
-
 				}
 
 
 			}
 			
 			if (recipesAmount != 0) {
-				getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "FancyBags >>> loaded " + recipesAmount + " recipes!");
+				getServer().getConsoleSender().sendMessage(parse("<GREEN>FancyBags >>> loaded <AQUA>" + recipesAmount + "</AQUA> recipes!"));
 			} else {
-				getServer().getConsoleSender().sendMessage(ChatColor.RED + "FancyBags >>> No recipes detected!");
+				getServer().getConsoleSender().sendMessage(parse("<RED>FancyBags >>> No recipes detected!"));
 			}
 			
 			
 		} else {
-			getServer().getConsoleSender().sendMessage(ChatColor.RED + "FancyBags >>> No recipes detected!");
+			getServer().getConsoleSender().sendMessage(parse("<RED>FancyBags >>> No recipes detected!"));
 		}
 	}
 	
@@ -233,27 +231,28 @@ public class FancyBags extends JavaPlugin implements Listener{
 		String version = Bukkit.getServer().getClass().getPackage().getName();
 		version = version.substring(version.lastIndexOf(".") + 1);
 		boolean isValid = true;
-		switch (version) {
-			case "v1_18_R1":
-				versionHandler = new Handler_1_18_R1();
-				break;
-			default:
-				isValid = false;
-				getServer().getConsoleSender().sendMessage(ChatColor.RED + "FancyBags >>> This version isn't supported!");
-				getServer().getConsoleSender().sendMessage(ChatColor.RED + "FancyBags >>> Plugin will be disabled!");
+		if(version.contains("v1_18_R1")){
+			versionHandler = new Handler_1_18_R1();
+		} else {
+			versionHandler = new Handler_1_18_R1();
+
+			isValid = false;
+			getServer().getConsoleSender().sendMessage(parse("<RED>FancyBags >>> This version isn't supported!"));
+			getServer().getConsoleSender().sendMessage(parse("<YELLOW>FancyBags >>> FancyBags will run anyways. However, I cannot guarantee that it will work."));
+
 		}
 		if (isValid) {
-			getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "FancyBags >>> NMS Version Detected: " + version);
-		}
-		return isValid;
+			getServer().getConsoleSender().sendMessage(parse("<GREEN>FancyBags >>> NMS Version Detected: <AQUA>" + version));
 
+		}
+		return true;
 	}
 
 	public static FancyBags getInstance() {
 		return instance;
 	}
 	
-	public static NMSHandler getVersionHandler() {
+	public static NMSHandler getNMSHandler() {
 		return versionHandler;
 	}
 }

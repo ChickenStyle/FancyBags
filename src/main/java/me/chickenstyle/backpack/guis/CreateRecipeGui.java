@@ -3,6 +3,9 @@ package me.chickenstyle.backpack.guis;
 
 import java.util.ArrayList;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -23,8 +26,9 @@ public class CreateRecipeGui {
 		emptySlots.add(30);
 		emptySlots.add(31);
 		emptySlots.add(32);
+
+		Inventory gui = Bukkit.createInventory(new CreateRecipeHolder(), 45, Component.text("Add recipe for the backpack!", NamedTextColor.GRAY, TextDecoration.BOLD));
 		
-		Inventory gui = Bukkit.createInventory(new CreateRecipeHolder(), 45, Utils.color("&7&lAdd recipe for the backpack!"));
 		for (int i = 0; i < 45;i++) {
 			if (!emptySlots.contains(i)) {
 				gui.setItem(i, Utils.getGrayVersionGlass());

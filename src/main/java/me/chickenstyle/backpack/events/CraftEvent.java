@@ -11,14 +11,14 @@ import me.chickenstyle.backpack.RandomString;
 public class CraftEvent implements Listener{
 	@EventHandler
 	public void onCraft(CraftItemEvent e) {
-		if (FancyBags.getVersionHandler().hasTag(e.getRecipe().getResult(),"BackpackID")) {
+		if (FancyBags.getNMSHandler().hasTag(e.getRecipe().getResult(),"BackpackID")) {
 			if (e.getClickedInventory() == null) return;
 				if (e.isShiftClick()) {
 					e.setCancelled(true);
 					e.getWhoClicked().sendMessage(Message.DISABLE_CRAFT.getMSG());
 					return;
 				}
-			e.getInventory().setResult(FancyBags.getVersionHandler().addStringTag(e.getRecipe().getResult(),"Random",new RandomString().nextString()));
+			e.getInventory().setResult(FancyBags.getNMSHandler().addStringTag(e.getRecipe().getResult(),"Random",new RandomString().nextString()));
 		}
 	}
 }

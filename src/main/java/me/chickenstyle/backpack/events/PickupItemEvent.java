@@ -13,7 +13,7 @@ public class PickupItemEvent implements Listener{
 	public void onPickupItem(InventoryPickupItemEvent e) {
 		if (!FancyBags.getInstance().getConfig().getBoolean("putBackpacksIntoShulkers")) {
 			if (e.getInventory().getType().equals(InventoryType.HOPPER)) {
-				if (FancyBags.getVersionHandler().hasTag(e.getItem().getItemStack(),"BackpackID")) {
+				if (FancyBags.getNMSHandler().hasTag(e.getItem().getItemStack(),"BackpackID")) {
 					e.setCancelled(true);
 				}
 			}
@@ -25,7 +25,7 @@ public class PickupItemEvent implements Listener{
 	public void onItemInventoryMove(InventoryMoveItemEvent e) {
 		if (!FancyBags.getInstance().getConfig().getBoolean("putBackpacksIntoShulkers")) {
 			if (e.getDestination().getType().equals(InventoryType.HOPPER)) {
-				if (FancyBags.getVersionHandler().hasTag(e.getItem(),"BackpackID")) {
+				if (FancyBags.getNMSHandler().hasTag(e.getItem(),"BackpackID")) {
 					e.setCancelled(true);
 				}
 			}

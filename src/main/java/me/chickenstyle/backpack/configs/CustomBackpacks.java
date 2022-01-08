@@ -75,7 +75,6 @@ public class CustomBackpacks {
     	
     }
     
-    @SuppressWarnings("deprecation")
 	static public void addBackpack(Backpack pack,HashMap<Character,ItemStack> map) {
     		config = YamlConfiguration.loadConfiguration(file);
     		String path = "Backpacks." + pack.getId();
@@ -92,15 +91,7 @@ public class CustomBackpacks {
         		for (char symbol:map.keySet()) {
         			if (map.get(symbol) != null && map.get(symbol).getType() != Material.AIR) {
 
-						if (Bukkit.getVersion().contains("1.8") ||
-								Bukkit.getVersion().contains("1.9") ||
-								Bukkit.getVersion().contains("1.10") ||
-								Bukkit.getVersion().contains("1.11") ||
-								Bukkit.getVersion().contains("1.12")) {
-							ingredients.add(symbol + ":" + map.get(symbol).getType() + "," + map.get(symbol).getData().getData());
-						} else {
-							ingredients.add(symbol + ":" + map.get(symbol).getType());
-						}
+						ingredients.add(symbol + ":" + map.get(symbol).getType());
 
         			}
         		}
@@ -132,18 +123,9 @@ public class CustomBackpacks {
 		
 		ItemStack item = Utils.createBackpackItemStack(name, texture,slotsAmount,id);
 		
-		ShapedRecipe recipe;
+		ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(FancyBags.getInstance(),path),item);
 
 
-
-		if (Bukkit.getVersion().contains("1.8") ||
-			Bukkit.getVersion().contains("1.9") ||
-			Bukkit.getVersion().contains("1.10") ||
-			Bukkit.getVersion().contains("1.11")) {
-			recipe = new ShapedRecipe(item);
-		} else {
-			recipe = new ShapedRecipe(new NamespacedKey(FancyBags.getInstance(),path),item);
-		}
 
 		
 		if (!config.get(path + ".craftRecipe").equals("none")) {
@@ -156,17 +138,8 @@ public class CustomBackpacks {
 				char symbol = data.split(":")[0].charAt(0);
 
 
-				if (Bukkit.getVersion().contains("1.8") ||
-						Bukkit.getVersion().contains("1.9") ||
-						Bukkit.getVersion().contains("1.10") ||
-						Bukkit.getVersion().contains("1.11") ||
-						Bukkit.getVersion().contains("1.12")) {
-					ItemStack mat = new ItemStack(Material.valueOf(data.split(":")[1].split(",")[0]),1,Byte.valueOf(data.split(":")[1].split(",")[1]));
-					recipe.setIngredient(symbol, mat.getData());
-				} else {
-					ItemStack mat = new ItemStack(Material.valueOf(data.split(":")[1].split(",")[0]));
-					recipe.setIngredient(symbol, mat.getType());
-				}
+				ItemStack mat = new ItemStack(Material.valueOf(data.split(":")[1].split(",")[0]));
+				recipe.setIngredient(symbol, mat.getType());
 			}
 		} else {
 			recipe = null;

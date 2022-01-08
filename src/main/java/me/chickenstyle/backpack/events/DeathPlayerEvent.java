@@ -3,18 +3,13 @@ package me.chickenstyle.backpack.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.chickenstyle.backpack.customholders.CreateRecipeHolder;
-import me.chickenstyle.backpack.customholders.RejectItemsHolder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -42,8 +37,8 @@ public class DeathPlayerEvent implements Listener {
 			if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
 				if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
 
-					boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-					int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
+					boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getItemInHand(), "BackpackTitle");
+					int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "Size");
 
 					ItemStack bag = Utils.loadBackpack(player,slotsAmount);
 
@@ -61,8 +56,8 @@ public class DeathPlayerEvent implements Listener {
 		} else {
 			if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
 				if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
-					boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-					int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
+					boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getItemInHand(), "BackpackTitle");
+					int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "Size");
 					ItemStack backpack = Utils.loadBackpack(player,slotsAmount);
 
 					if (!hasTag) {
@@ -100,8 +95,8 @@ public class DeathPlayerEvent implements Listener {
 
 		if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
 
-			boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-			int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
+			boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getItemInHand(), "BackpackTitle");
+			int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "Size");
 
 			ItemStack bag = Utils.loadBackpack(player,slotsAmount);
 
@@ -125,8 +120,8 @@ public class DeathPlayerEvent implements Listener {
 		Player player = e.getPlayer();
 		if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
 			if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
-				boolean hasTag = FancyBags.getVersionHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-				int slotsAmount = hasTag ? FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getVersionHandler().getIntData(player.getItemInHand(), "Size");
+				boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getItemInHand(), "BackpackTitle");
+				int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "Size");
 				ItemStack backpack = Utils.loadBackpack(player,slotsAmount);
 				player.setItemInHand(backpack);
 

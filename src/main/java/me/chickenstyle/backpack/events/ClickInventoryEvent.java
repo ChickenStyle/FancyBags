@@ -32,51 +32,35 @@ import me.chickenstyle.backpack.guis.CreateRecipeGui;
 
 
 public class ClickInventoryEvent implements Listener{
+	private final FancyBags main;
+
+	public ClickInventoryEvent(final FancyBags main){
+		this.main = main;
+	}
+
+
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onClickInventory(InventoryClickEvent e) {
-		if (e.getInventory() == null) return;
-		
+
 		Player player = (Player) e.getWhoClicked();
-		
-		String ver = Bukkit.getServer().getVersion();
 
-		if (ver.contains("1.8") || ver.contains("1.9") || ver.contains("1.10")) {
-			
-			if (e.getInventory().getType().equals(InventoryType.HOPPER)) {
-				if (FancyBags.getInstance().getConfig().getBoolean("putBackpacksIntoShulkers") == false) {
-					
-					if (e.getClick().equals(ClickType.NUMBER_KEY)) {
-						e.setCancelled(true);
-					}
-					
-					if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {return;}
-					if (FancyBags.getVersionHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
-						e.setCancelled(true);
-						return;
-					}
+		if (e.getInventory().getType().equals(InventoryType.HOPPER) || e.getInventory().getType().equals(InventoryType.SHULKER_BOX)) {
+			if (!main.getConfig().getBoolean("putBackpacksIntoShulkers")) {
+
+				if (e.getClick().equals(ClickType.NUMBER_KEY)) {
+					e.setCancelled(true);
 				}
 
-			}
-			
-		} else {
-			
-			if (e.getInventory().getType().equals(InventoryType.HOPPER) || e.getInventory().getType().equals(InventoryType.SHULKER_BOX)) {
-				if (FancyBags.getInstance().getConfig().getBoolean("putBackpacksIntoShulkers") == false) {
-					
-					if (e.getClick().equals(ClickType.NUMBER_KEY)) {
-						e.setCancelled(true);
-					}
-					
-					if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {return;}
-					if (FancyBags.getVersionHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
-						e.setCancelled(true);
-						return;
-					}
+				if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {
+					return;
 				}
-
+				if (FancyBags.getNMSHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
+					e.setCancelled(true);
+					return;
+				}
 			}
-			
+
 		}
 			
 		
@@ -90,13 +74,13 @@ public class ClickInventoryEvent implements Listener{
 			
 			if (e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {return;}
 			
-			if (FancyBags.getVersionHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
+			if (FancyBags.getNMSHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
 				e.setCancelled(true);
 				player.sendMessage(Message.DISABLE_PLACE.getMSG());
 				return;
 			}
-				if (CustomBackpacks.hasBackpack(FancyBags.getVersionHandler().getIntData(player.getItemInHand(),"BackpackID"))) {
-					int id = FancyBags.getVersionHandler().getIntData(player.getItemInHand(),"BackpackID");
+				if (CustomBackpacks.hasBackpack(FancyBags.getNMSHandler().getIntData(player.getItemInHand(),"BackpackID"))) {
+					int id = FancyBags.getNMSHandler().getIntData(player.getItemInHand(),"BackpackID");
 					Backpack pack = CustomBackpacks.getBackpack(id);
 					
 					if (pack.getReject().isRejecting()) {
@@ -104,7 +88,7 @@ public class ClickInventoryEvent implements Listener{
 							if (pack.getReject().getType().equals(RejectType.BLACKLIST)) {
 								for (ItemStack item:pack.getReject().getItems()) {
 									
-									if (!FancyBags.getVersionHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
+									if (!FancyBags.getNMSHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
 										if (isSimilar(item,e.getCurrentItem())) {
 											e.setCancelled(true);
 											player.sendMessage(Message.DISABLE_PLACE.getMSG());
@@ -121,8 +105,8 @@ public class ClickInventoryEvent implements Listener{
 										contains = true;
 									}
 								}
-								if (!FancyBags.getVersionHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
-									if (contains == false) {
+								if (!FancyBags.getNMSHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
+									if (!contains) {
 										e.setCancelled(true);
 										player.sendMessage(Message.DISABLE_PLACE.getMSG());
 									}
@@ -176,9 +160,11 @@ public class ClickInventoryEvent implements Listener{
 
 				if (airAmount == 9) {
 					pack.setRecipe(null);
-					CustomBackpacks.addBackpack(pack,new HashMap<Character,ItemStack>());
+					CustomBackpacks.addBackpack(pack, new HashMap<>());
 					FancyBags.creatingBackpack.remove(player.getUniqueId());
-					player.sendMessage(ChatColor.GREEN + "Backpack has been created! type /fb reload to load the recipe!");
+					player.sendMessage(main.parse(
+							"<GREEN>Backpack has been created! type /fb reload to load the recipe!"
+					));
 					e.setCancelled(true);
 					player.closeInventory();
 					return;
@@ -237,16 +223,8 @@ public class ClickInventoryEvent implements Listener{
 				
 				ItemStack bagItem = Utils.createBackpackItemStack(pack.getName(), pack.getTexture(), pack.getSlotsAmount(),pack.getId());
 				
-        		ShapedRecipe recipe;
-				if (Bukkit.getVersion().contains("1.8") ||
-					Bukkit.getVersion().contains("1.9") ||
-					Bukkit.getVersion().contains("1.10") ||
-					Bukkit.getVersion().contains("1.11")) {
-					recipe = new ShapedRecipe(bagItem);
-				} else {
-					recipe = new ShapedRecipe(new NamespacedKey(FancyBags.getInstance(),"key"),bagItem);
-				}
-				
+        		final ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(main,"key"),bagItem);
+
 				recipe.shape(firstLine,secondLine,thirdLine);
 				
 				for (Entry<Character, ItemStack> entry : ingredients.entrySet()) {
@@ -258,7 +236,9 @@ public class ClickInventoryEvent implements Listener{
 				pack.setRecipe(recipe);
 				CustomBackpacks.addBackpack(pack,ingredients);
 				FancyBags.creatingBackpack.remove(player.getUniqueId());
-				player.sendMessage(ChatColor.GREEN + "Backpack has been added! type /fb reload to load the recipe!");
+				player.sendMessage(main.parse(
+						"<GREEN>Backpack has been added! type <AQUA>/fb reload</AQUA> to load the recipe!"
+				));
 				e.setCancelled(true);
 				player.closeInventory();
 			}
@@ -268,13 +248,15 @@ public class ClickInventoryEvent implements Listener{
 		if (e.getInventory().getHolder() instanceof RejectItemsHolder) {
 			ItemStack green = Utils.getGreenVersionGlass();
 			ItemMeta meta = green.getItemMeta();
-			meta.setDisplayName(Utils.color("&aClick here to save the blacklist/whitelist!"));
+			meta.displayName(main.parse(
+					"<GREEN>Click here to save the blacklist/whitelist!"
+			));
 			green.setItemMeta(meta);
 
 			if (e.getCurrentItem() != null && !e.getCurrentItem().getType().equals(Material.AIR)) {
 				if (e.getCurrentItem().isSimilar(green)) {
 					e.setCancelled(true);
-					ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+					ArrayList<ItemStack> items = new ArrayList<>();
 					ItemStack[] contents = e.getView().getTopInventory().getContents();
 					for (int i = 0;i < 53;i++) {
 						if (contents[i] != null && !contents[i].getType().equals(Material.AIR)) {
@@ -285,9 +267,11 @@ public class ClickInventoryEvent implements Listener{
 					Backpack pack = FancyBags.creatingBackpack.get(player.getUniqueId());
 					pack.getReject().setItems(items);
 					FancyBags.creatingBackpack.put(player.getUniqueId(), pack);
-					
-					player.sendMessage(Utils.color("&aOkey, and the now lets create the recipes!"));
-					
+
+					player.sendMessage(main.parse(
+							"<GREEN>Okey, and the now lets create the recipes!"
+					));
+
 					new CreateRecipeGui(player);
 				}
 			}
@@ -298,35 +282,12 @@ public class ClickInventoryEvent implements Listener{
 	@SuppressWarnings("deprecation")
 	public static boolean isSimilar(ItemStack a, ItemStack b) {
 		
-		
 	    if(a == null || b == null)
 	        return false;
 	    
 	    if(a.getType() != b.getType())
 	        return false;
 
-		if (Bukkit.getVersion().contains("1.8") ||
-			Bukkit.getVersion().contains("1.9") ||
-			Bukkit.getVersion().contains("1.10")||
-			Bukkit.getVersion().contains("1.11")||
-			Bukkit.getVersion().contains("1.12")) {
-			ItemStack item = new ItemStack(b.getType(),1,b.getData().getData());
-			
-			if (!item.getType().isBlock()) {
-				item.setDurability((short) 0);
-				
-				
-				if (a.getData().getData() != item.getData().getData()) {
-					return false;
-				} 
-			} else {
-				if (a.getData().getData() != item.getData().getData()) {
-					return false;
-				} 
-			}
-			
-			
-		}
 	    
 
 	    ItemMeta first = a.getItemMeta();
@@ -346,10 +307,10 @@ public class ClickInventoryEvent implements Listener{
 		    if (!first.getLore().equals(second.getLore())) 
 		    	return false;
 	    }
-	    
+
 	    if (!first.getEnchants().equals(second.getEnchants()))
-	    	return false;  
-	    
+	    	return false;
+
 	    return true;
 	}
 	
