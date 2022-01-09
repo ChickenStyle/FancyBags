@@ -28,9 +28,8 @@ public class Handler_API implements NMSHandler {
         NamespacedKey key = new NamespacedKey(main, tag);
 
 
-        if (itemPDB.has(key, PersistentDataType.STRING)) {
-            itemPDB.remove(key);
-        }
+        itemPDB.remove(key);
+
         item.setItemMeta(itemMeta);
         return item;
     }
@@ -47,16 +46,15 @@ public class Handler_API implements NMSHandler {
         NamespacedKey key = new NamespacedKey(main, tag);
 
 
-        if (!itemPDB.has(key, PersistentDataType.INTEGER)) {
-            itemPDB.set(key, PersistentDataType.INTEGER, data);
-        }
+        itemPDB.set(key, PersistentDataType.INTEGER, data);
+
 
         item.setItemMeta(itemMeta);
         return item;
     }
 
     @Override
-    public ItemStack addStringTag(ItemStack item,String tag, String data) {
+    public ItemStack addStringTag(ItemStack item, String tag, String data) {
         final ItemMeta itemMeta = getItemMeta(item);
         if(itemMeta == null){
             return null;
@@ -67,11 +65,12 @@ public class Handler_API implements NMSHandler {
         NamespacedKey key = new NamespacedKey(main, tag);
 
 
-        if (!itemPDB.has(key, PersistentDataType.STRING)) {
-            itemPDB.set(key, PersistentDataType.STRING, data);
-        }
+        itemPDB.set(key, PersistentDataType.STRING, data);
+
 
         item.setItemMeta(itemMeta);
+
+
         return item;
     }
 
