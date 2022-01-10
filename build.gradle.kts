@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "me.chickenstyle.backpack"
-version = "2.2"
+version = "2.3.1"
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
@@ -39,7 +39,7 @@ dependencies {
 
 
 
-val shadowPath = "rocks.gravili.notquests"
+val shadowPath = "me.chickenstyle.backpack.shadow"
 tasks.withType<ShadowJar> {
 
     minimize()
@@ -75,8 +75,8 @@ bukkit {
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     main = "me.chickenstyle.backpack.FancyBags"
     apiVersion = "1.18"
-    authors = listOf("Author")
-    version = "2.2"
+    authors = listOf("ChickenStyle")
+    version = "2.3.1"
     description = "implements cool backpacks to the game"
     commands {
         register("fancybags") {

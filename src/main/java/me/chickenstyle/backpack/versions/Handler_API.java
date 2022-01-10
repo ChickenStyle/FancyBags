@@ -2,7 +2,6 @@ package me.chickenstyle.backpack.versions;
 
 import me.chickenstyle.backpack.FancyBags;
 import me.chickenstyle.backpack.NMSHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
