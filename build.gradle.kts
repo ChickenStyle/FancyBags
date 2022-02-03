@@ -34,6 +34,7 @@ dependencies {
         exclude(group = "net.kyori", module = "adventure-api")
         exclude(group = "net.kyori", module = "adventure-bom")
     }
+
 }
 
 

@@ -102,7 +102,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 
 
 	public final Component parse(final String miniMessageString){
-		return miniMessage.parse(miniMessageString);
+		return miniMessage.deserialize(miniMessageString);
 	}
 
 	@Override
