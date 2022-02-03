@@ -174,7 +174,7 @@ public class Utils {
 		
 		
 		for (String line: FancyBags.getInstance().getConfig().getStringList("backpackLore")) {
-			lore.add(FancyBags.getInstance().parse(line.replace("{slotsAmount}", slotsAmount + "")));
+			lore.add(FancyBags.getInstance().parse(line.replace("{slotsAmount}", slotsAmount + "")).decoration(TextDecoration.ITALIC, false));
 		}
 		
 		lore.add(FancyBags.getInstance().parse(" ").decoration(TextDecoration.ITALIC, false));
