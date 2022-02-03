@@ -13,13 +13,17 @@ public class NamePrompt extends StringPrompt{
 	
 	@Override
 	public String getPromptText(ConversationContext context) {
-		return Utils.color("&7Enter a name for the backpack!");
+		return "<gray>Enter a name for the backpack!";
 	}
 	
 	@Override
 	public Prompt acceptInput(ConversationContext context, String input) {
 		Player player = (Player) context.getForWhom();
-		player.sendMessage(Utils.color("&a" + input));
+		player.sendMessage(
+				FancyBags.getInstance().parse(
+						"<green>" + input
+				)
+		);
 		Backpack pack = FancyBags.creatingBackpack.get(player.getUniqueId());
 		pack.setName(input);
 		FancyBags.creatingBackpack.put(player.getUniqueId(), pack);

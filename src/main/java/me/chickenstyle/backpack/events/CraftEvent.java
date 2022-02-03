@@ -15,7 +15,7 @@ public class CraftEvent implements Listener{
 			if (e.getClickedInventory() == null) return;
 				if (e.isShiftClick()) {
 					e.setCancelled(true);
-					e.getWhoClicked().sendMessage(Message.DISABLE_CRAFT.getMSG());
+					e.getWhoClicked().sendMessage(FancyBags.getInstance().parse(Message.DISABLE_CRAFT.getMSG()));
 					return;
 				}
 			e.getInventory().setResult(FancyBags.getNMSHandler().addStringTag(e.getRecipe().getResult(),"Random",new RandomString().nextString()));

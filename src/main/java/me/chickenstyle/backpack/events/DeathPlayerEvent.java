@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +22,6 @@ import me.chickenstyle.backpack.customholders.BackpackHolder;
 
 public class DeathPlayerEvent implements Listener {
 	
-	@SuppressWarnings({ "deprecation" })
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		Player player = e.getEntity();
@@ -33,12 +34,13 @@ public class DeathPlayerEvent implements Listener {
 		}
 
 
-		if (player.getWorld().getGameRuleValue("keepInventory").equals("true")) {
-			if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
+		if (Boolean.TRUE.equals(player.getWorld().getGameRuleValue(GameRule.KEEP_INVENTORY))) {
+			player.getInventory().getItemInMainHand();
+			if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
 				if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
 
-					boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-					int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "Size");
+					boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getInventory().getItemInMainHand(), "BackpackTitle");
+					int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "Size");
 
 					ItemStack bag = Utils.loadBackpack(player,slotsAmount);
 
@@ -46,7 +48,7 @@ public class DeathPlayerEvent implements Listener {
 						bag = Utils.clearOldTags(bag);
 					}
 
-					player.setItemInHand(bag);
+					player.getInventory().setItemInMainHand(bag);
 
 					player.playSound(player.getLocation(), Utils.getVersionChestCloseSound(), (float) FancyBags.getInstance().getConfig().getDouble("soundLevelOfBackpacks"), (float) FancyBags.getInstance().getConfig().getDouble("pitchLevelOfBackpacks"));
 					Bukkit.getPluginManager().callEvent(new BackpackCloseEvent(player, player.getOpenInventory().getTopInventory()));
@@ -54,10 +56,10 @@ public class DeathPlayerEvent implements Listener {
 				}
 			}
 		} else {
-			if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
+			if (player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().getType() != Material.AIR) {
 				if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
-					boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-					int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "Size");
+					boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getInventory().getItemInMainHand(), "BackpackTitle");
+					int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "Size");
 					ItemStack backpack = Utils.loadBackpack(player,slotsAmount);
 
 					if (!hasTag) {
@@ -65,10 +67,10 @@ public class DeathPlayerEvent implements Listener {
 					}
 
 
-					List<ItemStack> list = new ArrayList<ItemStack>();
+					List<ItemStack> list = new ArrayList<>();
 
 					for (ItemStack item:e.getDrops()) {
-						if (item.equals(player.getItemInHand())) {
+						if (item.equals(player.getInventory().getItemInMainHand())) {
 							list.add(backpack);
 						} else {
 							list.add(item);
@@ -90,13 +92,12 @@ public class DeathPlayerEvent implements Listener {
 
 	@EventHandler
 	public void onPlayerTeleport(EntityPortalEnterEvent e) {
-		if (!(e.getEntity() instanceof Player)) { return;}
-		Player player = (Player) e.getEntity();
+		if (!(e.getEntity() instanceof Player player)) { return;}
 
 		if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
 
-			boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-			int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "Size");
+			boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getInventory().getItemInMainHand(), "BackpackTitle");
+			int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "Size");
 
 			ItemStack bag = Utils.loadBackpack(player,slotsAmount);
 
@@ -114,16 +115,16 @@ public class DeathPlayerEvent implements Listener {
 	}
 	
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void playerLeave(PlayerQuitEvent e) {
 		Player player = e.getPlayer();
-		if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
+		player.getInventory().getItemInMainHand();
+		if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
 			if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
-				boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getItemInHand(), "BackpackTitle");
-				int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getItemInHand(), "Size");
+				boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getInventory().getItemInMainHand(), "BackpackTitle");
+				int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "Size");
 				ItemStack backpack = Utils.loadBackpack(player,slotsAmount);
-				player.setItemInHand(backpack);
+				player.getInventory().setItemInMainHand(backpack);
 
 				player.playSound(player.getLocation(), Utils.getVersionChestCloseSound(), (float) FancyBags.getInstance().getConfig().getDouble("soundLevelOfBackpacks"), (float) FancyBags.getInstance().getConfig().getDouble("pitchLevelOfBackpacks"));
 				Bukkit.getPluginManager().callEvent(new BackpackCloseEvent(player, player.getOpenInventory().getTopInventory()));	

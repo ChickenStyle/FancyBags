@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -39,7 +38,6 @@ public class ClickInventoryEvent implements Listener{
 	}
 
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onClickInventory(InventoryClickEvent e) {
 
@@ -76,11 +74,11 @@ public class ClickInventoryEvent implements Listener{
 			
 			if (FancyBags.getNMSHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
 				e.setCancelled(true);
-				player.sendMessage(Message.DISABLE_PLACE.getMSG());
+				player.sendMessage(FancyBags.getInstance().parse(Message.DISABLE_PLACE.getMSG()));
 				return;
 			}
-				if (CustomBackpacks.hasBackpack(FancyBags.getNMSHandler().getIntData(player.getItemInHand(),"BackpackID"))) {
-					int id = FancyBags.getNMSHandler().getIntData(player.getItemInHand(),"BackpackID");
+				if (CustomBackpacks.hasBackpack(FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(),"BackpackID"))) {
+					int id = FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(),"BackpackID");
 					Backpack pack = CustomBackpacks.getBackpack(id);
 					
 					if (pack.getReject().isRejecting()) {
@@ -91,7 +89,7 @@ public class ClickInventoryEvent implements Listener{
 									if (!FancyBags.getNMSHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
 										if (isSimilar(item,e.getCurrentItem())) {
 											e.setCancelled(true);
-											player.sendMessage(Message.DISABLE_PLACE.getMSG());
+											player.sendMessage(FancyBags.getInstance().parse(Message.DISABLE_PLACE.getMSG()));
 											break;
 										}
 									}
@@ -108,7 +106,7 @@ public class ClickInventoryEvent implements Listener{
 								if (!FancyBags.getNMSHandler().hasTag(e.getCurrentItem(),"BackpackID")) {
 									if (!contains) {
 										e.setCancelled(true);
-										player.sendMessage(Message.DISABLE_PLACE.getMSG());
+										player.sendMessage(FancyBags.getInstance().parse(Message.DISABLE_PLACE.getMSG()));
 									}
 								}
 							}
@@ -135,7 +133,7 @@ public class ClickInventoryEvent implements Listener{
 				e.setCancelled(true);
 			}
 			if (e.getCurrentItem().equals(Utils.getGreenVersionGlass())) {
-				ArrayList<Integer> emptySlots = new ArrayList<Integer>();
+				ArrayList<Integer> emptySlots = new ArrayList<>();
 				emptySlots.add(12);
 				emptySlots.add(13);
 				emptySlots.add(14);
@@ -146,7 +144,7 @@ public class ClickInventoryEvent implements Listener{
 				emptySlots.add(31);
 				emptySlots.add(32);
 
-				ArrayList<ItemStack> materials = new ArrayList<ItemStack>();
+				ArrayList<ItemStack> materials = new ArrayList<>();
 				int airAmount = 0;
 				for (Integer i:emptySlots) {
 					if (e.getInventory().getItem(i) == null || e.getInventory().getItem(i).getType().equals(Material.AIR)) {
@@ -250,7 +248,7 @@ public class ClickInventoryEvent implements Listener{
 			ItemMeta meta = green.getItemMeta();
 			meta.displayName(main.parse(
 					"<GREEN>Click here to save the blacklist/whitelist!"
-			));
+			).decoration(TextDecoration.ITALIC, false));
 			green.setItemMeta(meta);
 
 			if (e.getCurrentItem() != null && !e.getCurrentItem().getType().equals(Material.AIR)) {
@@ -279,7 +277,6 @@ public class ClickInventoryEvent implements Listener{
 	  
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static boolean isSimilar(ItemStack a, ItemStack b) {
 		
 	    if(a == null || b == null)
@@ -298,18 +295,19 @@ public class ClickInventoryEvent implements Listener{
 	    	return false;
 	    
 	    if (first.hasDisplayName() && second.hasDisplayName()) {
-		    if (!first.getDisplayName().equals(second.getDisplayName()))
+		    if (!first.displayName().equals(second.displayName()))
 		    	return false;
 	    }
 	    
 	    
 	    if (first.hasLore() && second.hasLore()) {
-		    if (!first.getLore().equals(second.getLore())) 
+		    if (!first.lore().equals(second.lore()))
 		    	return false;
 	    }
 
-	    if (!first.getEnchants().equals(second.getEnchants()))
-	    	return false;
+	    if (!first.getEnchants().equals(second.getEnchants())){
+			return false;
+		}
 
 	    return true;
 	}

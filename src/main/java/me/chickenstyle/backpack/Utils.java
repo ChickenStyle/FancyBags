@@ -10,8 +10,9 @@ import java.util.Base64;
 import java.util.UUID;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -30,6 +31,7 @@ import com.mojang.authlib.properties.Property;
 import me.chickenstyle.backpack.customholders.BackpackHolder;
 
 public class Utils {
+
 	
 	public static String itemstackToBase64(ItemStack item) throws UTFDataFormatException {
 		String itemString = null;
@@ -65,9 +67,9 @@ public class Utils {
 		return item;
 	}
 	
-	public static String color(String text) {
-		return ChatColor.translateAlternateColorCodes('&', text);
-	}
+	/*public static Component color(String text) {
+		return FancyBags.getInstance().parse(text);
+	}*/
 	
 	public static ItemStack getVersionSkull() {
 		return new ItemStack(Material.valueOf("PLAYER_HEAD"));
@@ -79,7 +81,8 @@ public class Utils {
 
         
         ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(color(FancyBags.getInstance().getConfig().getString("slotsLimit")));
+		meta.displayName(FancyBags.getInstance().parse(FancyBags.getInstance().getConfig().getString("slotsLimit")).decoration(TextDecoration.ITALIC, false));
+
         glass.setItemMeta(meta);
         return glass;
     }
@@ -88,7 +91,7 @@ public class Utils {
     	final ItemStack glass = new ItemStack(Material.valueOf("GREEN_STAINED_GLASS_PANE"));
         
         ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(ChatColor.GREEN + "Click here to save the recipe!");
+		meta.displayName(Component.text("Click here to save the recipe!", NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false));
         glass.setItemMeta(meta);
         return glass;
     }
@@ -99,7 +102,7 @@ public class Utils {
 
         
         ItemMeta meta = glass.getItemMeta();
-		meta.displayName(Component.text(" "));
+		meta.displayName(Component.text(" ").decoration(TextDecoration.ITALIC, false));
         glass.setItemMeta(meta);
         return glass;
     }
@@ -114,15 +117,15 @@ public class Utils {
 
 
     
-    public static ItemStack createCustomSkull(String displayName, String texture) {
+    public static ItemStack createCustomSkull(Component displayName, String texture) {
     	try {
             ItemStack skull = getVersionSkull();
             if (texture.isEmpty()) {
                 return skull;
             }
-            texture = "http://textures.minecraft.net/texture/" + texture;
+            texture = "https://textures.minecraft.net/texture/" + texture;
             SkullMeta skullMeta = (SkullMeta)skull.getItemMeta();
-            skullMeta.setDisplayName(color(displayName));
+            skullMeta.displayName(displayName.decoration(TextDecoration.ITALIC, false));
             GameProfile profile = new GameProfile(UUID.randomUUID(), null);
             byte[] encodedData = java.util.Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", texture).getBytes());
             profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
@@ -151,8 +154,8 @@ public class Utils {
     
     
 	public static ItemStack createBackpackItemStack(String name,String texture,int slotsAmount,int id) {
-    	ItemStack item = null;
-		item = FancyBags.getNMSHandler().addIntTag(createCustomSkull(name, texture), "BackpackID", id);
+    	ItemStack item;
+		item = FancyBags.getNMSHandler().addIntTag(createCustomSkull(FancyBags.getInstance().parse(name), texture), "BackpackID", id);
     	item = FancyBags.getNMSHandler().addStringTag(item, "BackpackTitle", name);
 		item = FancyBags.getNMSHandler().addIntTag(item, "SlotsAmount", slotsAmount);
     	
@@ -167,19 +170,19 @@ public class Utils {
 			}
 		}
 		
-		ArrayList<String> lore = new ArrayList<String>();
+		ArrayList<Component> lore = new ArrayList<>();
 		
 		
-		for (String line:(ArrayList<String>) FancyBags.getInstance().getConfig().get("backpackLore")) {
-			lore.add(Utils.color(line.replace("{slotsAmount}", slotsAmount + "")));
+		for (String line: FancyBags.getInstance().getConfig().getStringList("backpackLore")) {
+			lore.add(FancyBags.getInstance().parse(line.replace("{slotsAmount}", slotsAmount + "")));
 		}
 		
-		lore.add(" ");
-		lore.add(Utils.color(FancyBags.getInstance().getConfig().getString("emptyBackpack")));
-		lore.add(" ");
+		lore.add(FancyBags.getInstance().parse(" ").decoration(TextDecoration.ITALIC, false));
+		lore.add(FancyBags.getInstance().parse(FancyBags.getInstance().getConfig().getString("emptyBackpack")).decoration(TextDecoration.ITALIC, false));
+		lore.add(FancyBags.getInstance().parse(" ").decoration(TextDecoration.ITALIC, false));
     	
     	ItemMeta meta = item.getItemMeta();
-    	meta.setLore(lore);
+    	meta.lore(lore);
     	item.setItemMeta(meta);
     	
     	return item;
@@ -223,31 +226,30 @@ public class Utils {
 		}
 		
 		if (sendMessage) {
-			player.sendMessage(Message.DISABLE_PLACE.getMSG());
+			player.sendMessage(FancyBags.getInstance().parse(Message.DISABLE_PLACE.getMSG()));
 		}
 		
-		ArrayList<String> lore = Utils.loadLoreBackpack(player,slotsAmount);
+		ArrayList<Component> lore = Utils.loadLoreBackpack(player,slotsAmount);
 		ItemMeta meta = bag.getItemMeta();
-		meta.setLore(lore);
+		meta.lore(lore);
 		bag.setItemMeta(meta);
 		return bag;
     }
     
-    @SuppressWarnings({ "unchecked" })
-	public static ArrayList<String> loadLoreBackpack(Player player,int slots) {
-		ArrayList<String> lore = new ArrayList<String>();
+	public static ArrayList<Component> loadLoreBackpack(Player player,int slots) {
+		ArrayList<Component> lore = new ArrayList<>();
 		
 		
-		for (String line:(ArrayList<String>) FancyBags.getInstance().getConfig().get("backpackLore")) {
-			lore.add(Utils.color(line.replace("{slotsAmount}", slots + "")));
+		for (String line: FancyBags.getInstance().getConfig().getStringList("backpackLore")) {
+			lore.add(FancyBags.getInstance().parse(line.replace("{slotsAmount}", slots + "")).decoration(TextDecoration.ITALIC, false));
 		}
 
 		if (FancyBags.getInstance().getConfig().getBoolean("showContents")) {
-			lore.add(" ");
+			lore.add(FancyBags.getInstance().parse(" ").decoration(TextDecoration.ITALIC, false));
 			if (!isEmpty(player.getOpenInventory().getTopInventory())) {
 
 				//Count and sort all the items in the backpack
-				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+				ArrayList<ItemStack> items = new ArrayList<>();
 				for (ItemStack item:player.getOpenInventory().getTopInventory().getContents()) {
 					if (item != null && item.getType() != Material.AIR && !item.equals(Utils.getRedVersionGlass())) {
 
@@ -277,26 +279,29 @@ public class Utils {
 							structure = structure.replace("{number}", item.getAmount() + "");
 
 							if (item.getItemMeta().hasDisplayName()) {
-								structure = structure.replace("{item_name}", item.getItemMeta().getDisplayName());
+								structure = structure.replace("{item_name}", FancyBags.getInstance().getMiniMessage().serialize(item.getItemMeta().displayName()));
 							} else {
-								structure = structure.replace("{item_name}", "&f" + getName(item.getType()));
+								structure = structure.replace("{item_name}", "<white>" + getName(item.getType()));
 							}
 
-							lore.add(Utils.color(structure));
+							lore.add(FancyBags.getInstance().parse(structure).decoration(TextDecoration.ITALIC, false));
 						}
 					} else {
 						for (int i = 0; i < 5;i++) {
 							ItemStack item = items.get(i);
 							String structure = FancyBags.getInstance().getConfig().getString("displayItemInLore");
-							structure = structure.replace("{number}", item.getAmount() + "");
+							if(structure != null){
+								structure = structure.replace("{number}", item.getAmount() + "");
 
-							if (item.getItemMeta().hasDisplayName()) {
-								structure = structure.replace("{item_name}", item.getItemMeta().getDisplayName());
-							} else {
-								structure = structure.replace("{item_name}", "&f" + getName(item.getType()));
+								if (item.getItemMeta().hasDisplayName()) {
+									structure = structure.replace("{item_name}", FancyBags.getInstance().getMiniMessage().serialize(item.getItemMeta().displayName()));
+								} else {
+									structure = structure.replace("{item_name}", "<white>" + getName(item.getType()));
+								}
+
+								lore.add(FancyBags.getInstance().parse(structure).decoration(TextDecoration.ITALIC, false));
 							}
 
-							lore.add(Utils.color(structure));
 						}
 
 						int amount = 0;
@@ -305,22 +310,25 @@ public class Utils {
 						}
 
 						String other = FancyBags.getInstance().getConfig().getString("otherItemsInLore");
-						other = other.replace("{amount}", amount + "");
-						lore.add(Utils.color(other));
+						if(other != null){
+							other = other.replace("{amount}", amount + "");
+							lore.add(FancyBags.getInstance().parse(other).decoration(TextDecoration.ITALIC, false));
+						}
+
 
 					}
 				} else {
-					lore.add(Utils.color(FancyBags.getInstance().getConfig().getString("emptyBackpack")));
+					lore.add(FancyBags.getInstance().parse(FancyBags.getInstance().getConfig().getString("emptyBackpack")).decoration(TextDecoration.ITALIC, false));
 				}
 
 
 
 
 			} else {
-				lore.add(Utils.color(FancyBags.getInstance().getConfig().getString("emptyBackpack")));
+				lore.add(FancyBags.getInstance().parse(FancyBags.getInstance().getConfig().getString("emptyBackpack")).decoration(TextDecoration.ITALIC, false));
 			}
 
-			lore.add(" ");
+			lore.add(FancyBags.getInstance().parse(" ").decoration(TextDecoration.ITALIC, false));
 		}
 		return lore;
     }

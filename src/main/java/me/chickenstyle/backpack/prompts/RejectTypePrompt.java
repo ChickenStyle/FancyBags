@@ -15,14 +15,14 @@ public class RejectTypePrompt extends StringPrompt{
 
 	@Override
 	public String getPromptText(ConversationContext context) {
-		return Utils.color("&7Enter a reject items type (whitelist or blacklist)!");
+		return "<gray>Enter a reject items type (whitelist or blacklist)!";
 	}
 	
 	@Override
 	public Prompt acceptInput(ConversationContext context, String input) {
 		try {
 			RejectType type = RejectType.valueOf(input.toUpperCase());
-			context.getForWhom().sendRawMessage(Utils.color("&7Good, now lets set the blacklist/whitelist items!"));
+			context.getForWhom().sendRawMessage("<gray>Good, now lets set the blacklist/whitelist items!");
 			Player player = (Player) context.getForWhom();
 
 			Backpack pack = FancyBags.creatingBackpack.get(player.getUniqueId());
@@ -31,7 +31,7 @@ public class RejectTypePrompt extends StringPrompt{
 			new RejectItemsGui(player);
 			return Prompt.END_OF_CONVERSATION;
 		} catch(Exception e) {
-			context.getForWhom().sendRawMessage(Utils.color("&cInvalid reject items type! (Type whitelist/blacklist)"));
+			context.getForWhom().sendRawMessage("<red>Invalid reject items type! (Type whitelist/blacklist)");
 			return new RejectTypePrompt();
 		}
 		

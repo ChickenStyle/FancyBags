@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,7 +44,7 @@ public class BackpackCommand implements CommandExecutor {
 							Conversation conversation = factory.withFirstPrompt(new IdPrompt()).withLocalEcho(true).buildConversation(player);
 							conversation.begin();
 						} else {
-							player.sendMessage(Message.NO_PERMISSION.getMSG());
+							player.sendMessage(main.parse(Message.NO_PERMISSION.getMSG()));
 						}
 					}
 
@@ -59,12 +58,12 @@ public class BackpackCommand implements CommandExecutor {
 						sender.sendMessage(main.parse("<GREEN>Configs and recipes have been reloaded!"));
 						
 					} else {
-						sender.sendMessage(Message.NO_PERMISSION.getMSG());
+						sender.sendMessage(main.parse(Message.NO_PERMISSION.getMSG()));
 					}
 				break;
 				
 				case "give":
-					if (sender.hasPermission("FancyBags.Admin") || sender.hasPermission("FancyBags." + args[0].toString())) {
+					if (sender.hasPermission("FancyBags.Admin") || sender.hasPermission("FancyBags." + args[0])) {
 						if (args.length == 3) {
 							if (Bukkit.getServer().getOnlinePlayers().contains(Bukkit.getPlayer(args[1]))) {
 								if (isInt(args[2])) {
@@ -84,7 +83,7 @@ public class BackpackCommand implements CommandExecutor {
 											target.getWorld().dropItemNaturally(target.getLocation(), itemBag);
 										}
 										
-										target.sendMessage(Utils.color(Message.GIVE_MESSAGE.getMSG().replace("{player}", sender.getName())
+										target.sendMessage(main.parse(Message.GIVE_MESSAGE.getMSG().replace("{player}", sender.getName())
 												.replace("{backpack}", bag.getName())));
 										
 										sender.sendMessage(main.parse(
@@ -107,31 +106,39 @@ public class BackpackCommand implements CommandExecutor {
 							sender.sendMessage(main.parse("<RED>Invalid usage\n<GRAY>fb give {player} {backpack ID}"));
 						}
 					} else {
-						sender.sendMessage(Message.NO_PERMISSION.getMSG());
+						sender.sendMessage(main.parse(
+								Message.NO_PERMISSION.getMSG()
+						));
 					}
 				break;
 				
 				case "help":
 					if (sender.hasPermission("FancyBags.Admin") || sender.hasPermission("FancyBags." + args[0].toString())) {
-						sender.sendMessage(Utils.color("&f----------[&6FancyBags&f]----------"));
-						sender.sendMessage(ChatColor.WHITE + "/fb give {player} {backpack_id}");
-						sender.sendMessage(ChatColor.WHITE + "");
-						sender.sendMessage(ChatColor.WHITE + "/fb addbackpack");
-						sender.sendMessage(ChatColor.WHITE + "");
-						sender.sendMessage(ChatColor.WHITE + "/fb reload");
-						sender.sendMessage(ChatColor.WHITE + "");
-						sender.sendMessage(ChatColor.WHITE + "/fb help");
-						sender.sendMessage(ChatColor.WHITE + "------------------------------");
+						sender.sendMessage(
+								main.parse(
+										"<white>----------[<gold>FancyBags</gold>]----------\n"
+										+ "\n"
+										+ "<white>/fb addbackpack\n"
+										+ "\n"
+										+ "<white>/fb reload\n"
+										+ "\n"
+										+ "<white>/fb help\n"
+										+ "<white>------------------------------"
+								)
+						);
+
 					} else {
-						sender.sendMessage(Message.NO_PERMISSION.getMSG());
+						sender.sendMessage(main.parse(
+								Message.NO_PERMISSION.getMSG()
+						));
 					}
 				break;
 					
 				default:
-					sender.sendMessage(ChatColor.GRAY + "Use /fb help to see all the command!");
+					sender.sendMessage(main.parse("<gray>Use /fb help to see all the commands!"));
 				}
 			} else {
-				sender.sendMessage(ChatColor.GRAY + "Use /fb help to see all the command!");
+				sender.sendMessage(main.parse("<gray>Use /fb help to see all the commands!"));
 			}
 				
 

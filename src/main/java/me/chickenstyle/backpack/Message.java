@@ -1,14 +1,13 @@
 package me.chickenstyle.backpack;
 
-import org.bukkit.ChatColor;
 
 public enum Message {
 
-    NO_PERMISSION(Color(getString("messages.noPermission"))),
-    DISABLE_PLACE(Color(getString("messages.disablePlace"))),
-    GIVE_MESSAGE(Color(getString("messages.giveMessage"))),
-	DISABLE_CRAFT(Color(getString("messages.disableCraft"))),
-	CANCEL_OPEN(Color(getString("messages.cancelOpen")));
+    NO_PERMISSION(getString("messages.noPermission")),
+    DISABLE_PLACE(getString("messages.disablePlace")),
+    GIVE_MESSAGE(getString("messages.giveMessage")),
+	DISABLE_CRAFT(getString("messages.disableCraft")),
+	CANCEL_OPEN(getString("messages.cancelOpen"));
     private final String error;
 
     Message(String error) {
@@ -19,9 +18,9 @@ public enum Message {
         return error;
     }
     
-    private static String Color(String text) {
+    /*private static String Color(String text) {
     	return ChatColor.translateAlternateColorCodes('&', text);
-    }
+    }*/
     
     private static String getString(String path) {
     	return FancyBags.getInstance().getConfig().getString(path);

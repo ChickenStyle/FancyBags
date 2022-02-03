@@ -93,7 +93,7 @@ public class RightClickEvent implements Listener{
 
 				} else {
 					e.setCancelled(true);
-					player.sendMessage(Message.CANCEL_OPEN.getMSG());
+					player.sendMessage(FancyBags.getInstance().parse(Message.CANCEL_OPEN.getMSG()));
 				}
 			
 			}

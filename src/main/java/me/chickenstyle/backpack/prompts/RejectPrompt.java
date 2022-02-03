@@ -19,7 +19,7 @@ public class RejectPrompt extends BooleanPrompt{
 
 	@Override
 	public String getPromptText(ConversationContext context) {
-		return Utils.color("&7Do you want the backpack to have blacklist/whitelist?");
+		return "<gray>Do you want the backpack to have blacklist/whitelist?";
 	}
 	
 
@@ -27,7 +27,7 @@ public class RejectPrompt extends BooleanPrompt{
 	protected Prompt acceptValidatedInput(ConversationContext context, boolean boo) {
 		Player player = (Player) context.getForWhom();
 		Backpack pack = FancyBags.creatingBackpack.get(player.getUniqueId());
-		pack.setReject(new RejectItems(boo, RejectType.NONE, new ArrayList<ItemStack>()));
+		pack.setReject(new RejectItems(boo, RejectType.NONE, new ArrayList<>()));
 		FancyBags.creatingBackpack.put(player.getUniqueId(), pack);
 		if (boo == true) {
 			return new RejectTypePrompt();

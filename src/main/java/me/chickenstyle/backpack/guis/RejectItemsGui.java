@@ -20,7 +20,7 @@ public class RejectItemsGui {
 
 		ItemStack green = Utils.getGreenVersionGlass();
 		ItemMeta meta = green.getItemMeta();
-		meta.displayName(Component.text("Click here to save the blacklist/whitelist!", NamedTextColor.GREEN));
+		meta.displayName(Component.text("Click here to save the blacklist/whitelist!", NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false));
 		green.setItemMeta(meta);
 		gui.setItem(53, green);
 		

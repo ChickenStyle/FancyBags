@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -64,7 +63,7 @@ public class CustomBackpacks {
     
 	static public ArrayList<Backpack> getBackpacks(){
     	ArrayList<Backpack> list = new ArrayList<Backpack>();
-        	if (config.getConfigurationSection("Backpacks") == null) return new ArrayList<Backpack>();
+        	if (config.getConfigurationSection("Backpacks") == null) return new ArrayList<>();
         	for (String id:config.getConfigurationSection("Backpacks").getKeys(false)) {
         		
         		list.add(getBackpack(Integer.valueOf(id)));

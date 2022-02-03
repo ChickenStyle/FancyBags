@@ -13,7 +13,7 @@ public class IdPrompt extends NumericPrompt{
 
 	@Override
 	public String getPromptText(ConversationContext context) {
-		return Utils.color("&7Lets start creating new backpack! \nEnter a &6unique &7backpack id. (Should be a number!)");
+		return "<gray>Lets start creating new backpack! \n<gray>Enter a <gold>unique</gold> backpack id. (Should be a number!)";
 			
 	}
 
@@ -21,7 +21,11 @@ public class IdPrompt extends NumericPrompt{
 	protected Prompt acceptValidatedInput(ConversationContext context, Number number) {
 		int id = Integer.valueOf(number.toString());
 		Player player = (Player) context.getForWhom();
-		player.sendMessage(Utils.color("&a" + id));
+		player.sendMessage(
+				FancyBags.getInstance().parse(
+						"<green>" + id
+				)
+		);
 		Backpack pack = FancyBags.creatingBackpack.get(player.getUniqueId());
 		pack.setId(id);
 		FancyBags.creatingBackpack.put(player.getUniqueId(), pack);
@@ -30,7 +34,7 @@ public class IdPrompt extends NumericPrompt{
 	
 	@Override
 	protected String getFailedValidationText(ConversationContext context,Number input) {
-		return Utils.color("&4 " + input + " is invalid id, please use a valid number!");
+		return "<red> " + input + " is an invalid id, please use a valid number!";
 	}
 
 }

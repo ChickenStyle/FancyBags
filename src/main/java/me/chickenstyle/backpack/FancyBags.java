@@ -97,13 +97,18 @@ public class FancyBags extends JavaPlugin implements Listener{
 			fancyBagsCommand.setTabCompleter(new FancyTab());
 		}
 
-		getServer().getConsoleSender().sendMessage("FancyBags plugin has been enabled!");
+		getServer().getConsoleSender().sendMessage(parse("FancyBags plugin has been enabled!"));
 	}
 
 
 	public final Component parse(final String miniMessageString){
 		return miniMessage.deserialize(miniMessageString);
 	}
+
+	public final MiniMessage getMiniMessage(){
+		return miniMessage;
+	}
+
 
 	@Override
 	public void onDisable() {
