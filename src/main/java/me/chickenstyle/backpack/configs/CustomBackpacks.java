@@ -114,7 +114,6 @@ public class CustomBackpacks {
     		}
     }
     
-    @SuppressWarnings({ "deprecation", "unchecked" })
 	static public Backpack getBackpack(int id) {
 		String path = "Backpacks." + id;
 		String name = config.getString(path + ".title");
@@ -161,11 +160,8 @@ public class CustomBackpacks {
     }
     	
     static public boolean hasBackpack(int id) {
-    	if (config.get("Backpacks." + id) != null) {
-    		return true;
-    	}
-    	return false;
-    }
+		return config.get("Backpacks." + id) != null;
+	}
 	
 	static public void configReload() {
    	 config = YamlConfiguration.loadConfiguration(file);
