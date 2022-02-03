@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "me.chickenstyle.backpack"
-version = "2.3.1"
+version = "2.4.0"
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
@@ -76,8 +76,8 @@ bukkit {
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     main = "me.chickenstyle.backpack.FancyBags"
     apiVersion = "1.18"
-    authors = listOf("ChickenStyle")
-    version = "2.3.1"
+    authors = listOf("ChickenStyle", "AlessioGr")
+    version = "2.4.0"
     description = "implements cool backpacks to the game"
     commands {
         register("fancybags") {
