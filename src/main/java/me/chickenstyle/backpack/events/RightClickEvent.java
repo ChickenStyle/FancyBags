@@ -2,7 +2,6 @@ package me.chickenstyle.backpack.events;
 
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -53,7 +52,7 @@ public class RightClickEvent implements Listener{
 						}
 
 						if(title != null && !title.isBlank()){
-							gui = Bukkit.createInventory(new BackpackHolder(), neededSlots, LegacyComponentSerializer.legacyAmpersand().deserialize(title));
+							gui = Bukkit.createInventory(new BackpackHolder(), neededSlots, FancyBags.getInstance().parse(title));
 						}else{
 							gui = Bukkit.createInventory(new BackpackHolder(), neededSlots, Component.text(" "));
 						}
@@ -75,7 +74,7 @@ public class RightClickEvent implements Listener{
 						Inventory data = Utils.inventoryFromBase64(FancyBags.getNMSHandler().getStringData(e.getItem(), "BackPack"));
 
 						gui = Bukkit.createInventory(data.getHolder(), data.getSize(),
-								LegacyComponentSerializer.legacyAmpersand().deserialize(FancyBags.getNMSHandler().getStringData(e.getItem(),"Title")));
+								FancyBags.getInstance().parse(FancyBags.getNMSHandler().getStringData(e.getItem(),"Title")));
 
 
 
