@@ -199,10 +199,14 @@ public class Utils {
     
     
     public static ItemStack clearOldTags(ItemStack item) {
-    	
-    	item = FancyBags.getNMSHandler().addIntTag(item, "SlotsAmount", FancyBags.getNMSHandler().getIntData(item,"Size"));
-    	item = FancyBags.getNMSHandler().addStringTag(item, "BackpackTitle", FancyBags.getNMSHandler().getStringData(item,"Title"));
-    	
+
+		if(FancyBags.getNMSHandler().hasTag(item, "Size")){
+			item = FancyBags.getNMSHandler().addIntTag(item, "SlotsAmount", FancyBags.getNMSHandler().getIntData(item,"Size"));
+		}
+		if(FancyBags.getNMSHandler().hasTag(item, "Title")){
+			item = FancyBags.getNMSHandler().addStringTag(item, "BackpackTitle", FancyBags.getNMSHandler().getStringData(item,"Title"));
+		}
+
     	item = FancyBags.getNMSHandler().removeTag(item, "BackPack");
     	item = FancyBags.getNMSHandler().removeTag(item, "Size");
     	item = FancyBags.getNMSHandler().removeTag(item, "Title");
@@ -230,9 +234,12 @@ public class Utils {
 		}
 		
 		ArrayList<Component> lore = Utils.loadLoreBackpack(player,slotsAmount);
-		ItemMeta meta = bag.getItemMeta();
-		meta.lore(lore);
-		bag.setItemMeta(meta);
+		if(bag.hasItemMeta()){
+			ItemMeta meta = bag.getItemMeta();
+			meta.lore(lore);
+			bag.setItemMeta(meta);
+		}
+
 		return bag;
     }
     

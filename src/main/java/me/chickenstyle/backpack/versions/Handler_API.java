@@ -55,7 +55,7 @@ public class Handler_API implements NMSHandler {
     @Override
     public ItemStack addStringTag(ItemStack item, String tag, String data) {
         final ItemMeta itemMeta = getItemMeta(item);
-        if(itemMeta == null){
+        if(itemMeta == null || tag == null || data == null){
             return null;
         }
 

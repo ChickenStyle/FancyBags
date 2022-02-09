@@ -31,7 +31,7 @@ public class CloseInventoryEvent implements Listener{
 				bag = Utils.clearOldTags(bag);
 			}
 
-			e.getPlayer().setItemInHand(bag);
+			e.getPlayer().getInventory().setItemInMainHand(bag);
 
 			player.playSound(player.getLocation(), Utils.getVersionChestCloseSound(), (float) FancyBags.getInstance().getConfig().getDouble("soundLevelOfBackpacks"), (float) FancyBags.getInstance().getConfig().getDouble("pitchLevelOfBackpacks"));
 			Bukkit.getPluginManager().callEvent(new BackpackCloseEvent(player, e.getView().getTopInventory()));
