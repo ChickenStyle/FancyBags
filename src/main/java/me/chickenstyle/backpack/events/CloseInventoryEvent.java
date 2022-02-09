@@ -1,5 +1,7 @@
 package me.chickenstyle.backpack.events;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,13 +27,21 @@ public class CloseInventoryEvent implements Listener{
 			boolean hasTag = FancyBags.getNMSHandler().hasTag(player.getInventory().getItemInMainHand(), "BackpackTitle");
 			int slotsAmount = hasTag ? FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "SlotsAmount") : FancyBags.getNMSHandler().getIntData(player.getInventory().getItemInMainHand(), "Size");
 
-			ItemStack bag = Utils.loadBackpack(player,slotsAmount);
 
+			ItemStack bag = Utils.loadBackpack(player,slotsAmount);
 			if (!hasTag) {
+				FancyBags.getInstance().getLogger().info("Removing old tags from bag...");
 				bag = Utils.clearOldTags(bag);
 			}
 
-			e.getPlayer().getInventory().setItemInMainHand(bag);
+			if(!e.getPlayer().getInventory().getItemInMainHand().isSimilar(bag)){
+				//player.sendMessage(Component.text("BackPack saved!", NamedTextColor.GREEN));
+				//Bukkit.getConsoleSender().sendMessage(Component.text(e.getPlayer().getInventory().getItemInMainHand().toString(), NamedTextColor.GREEN));
+				//Bukkit.getConsoleSender().sendMessage(Component.text(bag.toString(), NamedTextColor.YELLOW));
+
+				e.getPlayer().getInventory().setItemInMainHand(bag); //Only if not equal! Removes the unnecessary animation
+			}
+
 
 			player.playSound(player.getLocation(), Utils.getVersionChestCloseSound(), (float) FancyBags.getInstance().getConfig().getDouble("soundLevelOfBackpacks"), (float) FancyBags.getInstance().getConfig().getDouble("pitchLevelOfBackpacks"));
 			Bukkit.getPluginManager().callEvent(new BackpackCloseEvent(player, e.getView().getTopInventory()));

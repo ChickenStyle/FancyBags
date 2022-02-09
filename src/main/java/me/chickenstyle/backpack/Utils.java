@@ -12,6 +12,7 @@ import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -44,6 +45,8 @@ public class Utils {
 			if (io.toByteArray().length > 65535) {
 				throw new UTFDataFormatException();
 			}
+
+
 			
 			itemString = Base64.getEncoder().encodeToString(io.toByteArray());
 		
@@ -214,25 +217,39 @@ public class Utils {
     }
     
 	public static ItemStack loadBackpack(Player player,int slotsAmount) {
-		ItemStack bag = player.getInventory().getItemInMainHand();
-		
+		ItemStack bag = player.getInventory().getItemInMainHand().clone();
+
 		boolean sendMessage = false;
 		for (int i = 0; i < slotsAmount;i++) {
 			try {
+				if(player.getOpenInventory().getTopInventory().getItem(i) == null){
+					if(!FancyBags.getNMSHandler().getStringData(bag, i+"").equals(itemstackToBase64(new ItemStack(Material.AIR)))){
+						bag = FancyBags.getNMSHandler().addStringTag(bag,i + "",itemstackToBase64(new ItemStack(Material.AIR)));
+						//player.sendMessage("VC1");
+					}
+				}else{
+					final String cur = FancyBags.getNMSHandler().getStringData(bag, i+"");
+					final String newS = itemstackToBase64(player.getOpenInventory().getTopInventory().getItem(i));
+					if(  !cur.equals(newS ) ){ //TODO: Identical items have different strings here for some reason.
+						bag = FancyBags.getNMSHandler().addStringTag(bag,i + "",itemstackToBase64(player.getOpenInventory().getTopInventory().getItem(i)));
+						//player.sendMessage("VC2");
+						//Bukkit.getConsoleSender().sendMessage("Old: " + cur);
+						//Bukkit.getConsoleSender().sendMessage("New: " + newS);
 
-				bag = player.getOpenInventory().getTopInventory().getItem(i) == null ?
-						FancyBags.getNMSHandler().addStringTag(bag,i + "",itemstackToBase64(new ItemStack(Material.AIR))) :
-						FancyBags.getNMSHandler().addStringTag(bag, i + "", Utils.itemstackToBase64(player.getOpenInventory().getTopInventory().getItem(i)));
+						//player.sendMessage("Diff:" +StringUtils.difference(cur, newS));
 
+					}
+				}
 			} catch (UTFDataFormatException e) {
 				addItem(player, player.getOpenInventory().getTopInventory().getItem(i));
 			}
 		}
-		
+
+
 		if (sendMessage) {
 			player.sendMessage(FancyBags.getInstance().parse(Message.DISABLE_PLACE.getMSG()));
 		}
-		
+
 		ArrayList<Component> lore = Utils.loadLoreBackpack(player,slotsAmount);
 		if(bag.hasItemMeta()){
 			ItemMeta meta = bag.getItemMeta();
