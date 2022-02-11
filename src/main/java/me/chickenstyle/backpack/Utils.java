@@ -229,7 +229,12 @@ public class Utils {
 					}
 				}else{
 					final String cur = FancyBags.getNMSHandler().getStringData(bag, i+"");
-					final String newS = itemstackToBase64(player.getOpenInventory().getTopInventory().getItem(i));
+					final ItemStack itemToSave = player.getOpenInventory().getTopInventory().getItem(i);
+					if(itemToSave != null && itemToSave.getAmount() > 64){
+						itemToSave.setAmount(1); //Dupe protection
+					}
+					//player.sendMessage("IAmount: " + player.getOpenInventory().getTopInventory().getItem(i).getAmount());
+					final String newS = itemstackToBase64(itemToSave);
 					if(  !cur.equals(newS ) ){ //TODO: Identical items have different strings here for some reason.
 						bag = FancyBags.getNMSHandler().addStringTag(bag,i + "",itemstackToBase64(player.getOpenInventory().getTopInventory().getItem(i)));
 						//player.sendMessage("VC2");
