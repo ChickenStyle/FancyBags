@@ -4,13 +4,13 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     `java-library`
     id ("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.papermc.paperweight.userdev") version "1.3.4"
+    id("io.papermc.paperweight.userdev") version "1.3.5"
     id("xyz.jpenilla.run-paper") version "1.0.6" // Adds runServer and runMojangMappedServer tasks for testing
     id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
 group = "me.chickenstyle.backpack"
-version = "2.5.0"
+version = "2.6.0"
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
@@ -27,13 +27,7 @@ repositories {
     }
 }
 dependencies {
-    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
-
-    //Shaded
-    implementation("net.kyori:adventure-text-minimessage:4.10.0-SNAPSHOT") {
-        exclude(group = "net.kyori", module = "adventure-api")
-        exclude(group = "net.kyori", module = "adventure-bom")
-    }
+    paperDevBundle("1.18.2-R0.1-SNAPSHOT")
 
 }
 
@@ -44,12 +38,6 @@ val shadowPath = "me.chickenstyle.backpack.shadow"
 tasks.withType<ShadowJar> {
 
     minimize()
-    //MiniMessage
-    relocate("net.kyori.adventure.text.minimessage", "$shadowPath.kyori.minimessage")
-
-    dependencies {
-        include(dependency("net.kyori:adventure-text-minimessage:"))
-    }
 
     archiveClassifier.set("")
 }
@@ -77,7 +65,7 @@ bukkit {
     main = "me.chickenstyle.backpack.FancyBags"
     apiVersion = "1.18"
     authors = listOf("ChickenStyle", "AlessioGr")
-    version = "2.4.0"
+    version = "2.6.0"
     description = "implements cool backpacks to the game"
     commands {
         register("fancybags") {
