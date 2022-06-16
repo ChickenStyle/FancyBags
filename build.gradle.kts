@@ -4,13 +4,13 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     `java-library`
     id ("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.papermc.paperweight.userdev") version "1.3.5"
+    id("io.papermc.paperweight.userdev") version "1.3.6"
     id("xyz.jpenilla.run-paper") version "1.0.6" // Adds runServer and runMojangMappedServer tasks for testing
     id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
 group = "me.chickenstyle.backpack"
-version = "2.6.0"
+version = "2.7.0"
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
@@ -27,7 +27,7 @@ repositories {
     }
 }
 dependencies {
-    paperDevBundle("1.18.2-R0.1-SNAPSHOT")
+    paperDevBundle("1.19-R0.1-SNAPSHOT")
 
 }
 
@@ -63,9 +63,9 @@ tasks {
 bukkit {
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     main = "me.chickenstyle.backpack.FancyBags"
-    apiVersion = "1.18"
+    apiVersion = "1.19"
     authors = listOf("ChickenStyle", "AlessioGr")
-    version = "2.6.0"
+    version = "2.7.0"
     description = "implements cool backpacks to the game"
     commands {
         register("fancybags") {

@@ -97,44 +97,7 @@ public class Handler_API implements NMSHandler {
 
         if(itemPDB.has(key, PersistentDataType.INTEGER) || itemPDB.has(key, PersistentDataType.STRING)){
             return true;
-        }else{
-            if(FancyBags.getLegacyNMSHandler() != null){
-                if(FancyBags.getLegacyNMSHandler().hasTag(item, tag)){
-                    //Try to convert
-                    main.getServer().getConsoleSender().sendMessage(main.parse(
-                            "<GREEN>Converting old NMS Tag to new PDC Tag..."
-                    ));
-                    final int intTag = FancyBags.getLegacyNMSHandler().getIntData(item, tag);
-                    final String stringTag = FancyBags.getLegacyNMSHandler().getStringData(item, tag);
-
-                    FancyBags.getLegacyNMSHandler().removeTag(item, tag);
-
-                    if(intTag != -9304294){
-                        addIntTag(item, tag, intTag);
-                        main.getServer().getConsoleSender().sendMessage(main.parse(
-                                "    <GREEN>-> Added int PDC tag: <GRAY>" + intTag
-                        ));
-                    }
-
-                    if(stringTag != null && !stringTag.isBlank()){
-                        addStringTag(item, tag, stringTag);
-                        main.getServer().getConsoleSender().sendMessage(main.parse(
-                                "    <GREEN>-> Added String PDC tag: <GRAY>" + stringTag
-                        ));
-                    }
-
-                    main.getServer().getConsoleSender().sendMessage(main.parse(
-                            "    <GREEN>--> Test: has Tag?: <GRAY>" + hasTag(item, tag)
-                    ));
-
-                    main.getServer().getConsoleSender().sendMessage(main.parse(
-                            "<GREEN>Conversion completed!"
-                    ));
-                    return true;
-                }
-            }
         }
-
         return itemPDB.has(key, PersistentDataType.INTEGER) || itemPDB.has(key, PersistentDataType.STRING);
 
     }
@@ -148,39 +111,12 @@ public class Handler_API implements NMSHandler {
 
         final PersistentDataContainer itemPDB = itemMeta.getPersistentDataContainer();
 
-        NamespacedKey key = new NamespacedKey(main, tag);
+        final NamespacedKey key = new NamespacedKey(main, tag);
 
         if (itemPDB.has(key, PersistentDataType.INTEGER)) {
-            return itemPDB.get(key, PersistentDataType.INTEGER);
-        }else{
-            if(FancyBags.getLegacyNMSHandler() != null){
-                if(FancyBags.getLegacyNMSHandler().hasTag(item, tag)){
-                    //Try to convert
-                    main.getServer().getConsoleSender().sendMessage(main.parse(
-                            "<GREEN>Converting old NMS Tag to new PDC Tag..."
-                    ));
-                    final int intTag = FancyBags.getLegacyNMSHandler().getIntData(item, tag);
+            final Object intData = itemPDB.get(key, PersistentDataType.INTEGER);
 
-                    FancyBags.getLegacyNMSHandler().removeTag(item, tag);
-
-                    if(intTag != -9304294){
-                        addIntTag(item, tag, intTag);
-                        main.getServer().getConsoleSender().sendMessage(main.parse(
-                                "    <GREEN>-> Added int PDC tag: <GRAY>" + intTag
-                        ));
-                    }
-
-                    main.getServer().getConsoleSender().sendMessage(main.parse(
-                            "    <GREEN>--> Test: has Tag?: <GRAY>" + hasTag(item, tag)
-                    ));
-
-                    main.getServer().getConsoleSender().sendMessage(main.parse(
-                            "<GREEN>Conversion completed!"
-                    ));
-
-                    return intTag;
-                }
-            }
+            return intData != null ? (int)intData : 0;
         }
 
         return 0;
@@ -199,36 +135,6 @@ public class Handler_API implements NMSHandler {
 
         if (itemPDB.has(key, PersistentDataType.STRING)) {
             return itemPDB.get(key, PersistentDataType.STRING);
-        }else{
-            if(FancyBags.getLegacyNMSHandler() != null){
-                if(FancyBags.getLegacyNMSHandler().hasTag(item, tag)){
-                    //Try to convert
-                    main.getServer().getConsoleSender().sendMessage(main.parse(
-                            "<GREEN>Converting old NMS Tag to new PDC Tag..."
-                    ));
-                    final String stringTag = FancyBags.getLegacyNMSHandler().getStringData(item, tag);
-
-                    FancyBags.getLegacyNMSHandler().removeTag(item, tag);
-
-
-                    if(stringTag != null && !stringTag.isBlank()){
-                        addStringTag(item, tag, stringTag);
-                        main.getServer().getConsoleSender().sendMessage(main.parse(
-                                "    <GREEN>-> Added String PDC tag: <GRAY>" + stringTag
-                        ));
-                    }
-
-                    main.getServer().getConsoleSender().sendMessage(main.parse(
-                            "    <GREEN>--> Test: has Tag?: <GRAY>" + hasTag(item, tag)
-                    ));
-
-                    main.getServer().getConsoleSender().sendMessage(main.parse(
-                            "<GREEN>Conversion completed!"
-                    ));
-
-                    return stringTag;
-                }
-            }
         }
 
         return null;

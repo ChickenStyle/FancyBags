@@ -36,7 +36,7 @@ public class FancyBags extends JavaPlugin implements Listener{
 	
 	public static HashMap<UUID,Backpack> creatingBackpack = new HashMap<>();
 	public static ArrayList<NamespacedKey> recipes;
-	private static NMSHandler versionHandler, nmsVersionHandler;
+	private static NMSHandler versionHandler;
 	private static FancyBags instance;
 	private MiniMessage miniMessage;
 	
@@ -236,17 +236,8 @@ public class FancyBags extends JavaPlugin implements Listener{
 		String version = Bukkit.getServer().getClass().getPackage().getName();
 		version = version.substring(version.lastIndexOf(".") + 1);
 		boolean isValid = true;
-		if(version.contains("v1_18_R1")){
-			versionHandler = new Handler_API(this);
-			nmsVersionHandler = new Handler_1_18_R1();
-		} else {
-			versionHandler = new Handler_API(this);
 
-			isValid = false;
-			getServer().getConsoleSender().sendMessage(parse("<RED>FancyBags >>> This version isn't supported!"));
-			getServer().getConsoleSender().sendMessage(parse("<YELLOW>FancyBags >>> FancyBags will run anyways. However, I cannot guarantee that it will work."));
-
-		}
+		versionHandler = new Handler_API(this);
 		if (isValid) {
 			getServer().getConsoleSender().sendMessage(parse("<GREEN>FancyBags >>> NMS Version Detected: <AQUA>" + version));
 
@@ -262,7 +253,4 @@ public class FancyBags extends JavaPlugin implements Listener{
 		return versionHandler;
 	}
 
-	public static NMSHandler getLegacyNMSHandler() {
-		return nmsVersionHandler;
-	}
 }
