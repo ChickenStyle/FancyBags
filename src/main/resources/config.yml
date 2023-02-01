@@ -18,8 +18,8 @@ slotsLimit: '<red>Slots Limit!'
 showContents: true
 
 backpackLore:
-  - '<gray>A special portable bag with'
-  - '<gold>{slotsAmount} <gray>slots!'
+- '<gray>A special portable bag with'
+- '<gold>{slotsAmount} <gray>slots!'
 
 
 emptyBackpack: '<red>Backpack is empty!'
